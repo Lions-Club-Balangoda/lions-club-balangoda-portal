@@ -960,3 +960,4 @@ This document and associated database files are submitted for peer review in acc
 - [x] Comprehensive database indexes designed for category, year, status, and search filters.
 - [x] All queries parameterized to prevent SQL injection (SEC-02).
 - [x] Up-migration, down-migration, seed scripts, and dual-dialect (Postgres & MySQL) schemas committed to repo.
+

@@ -340,3 +340,4 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER trg_impact_statistics_updated_at
 BEFORE UPDATE ON impact_statistics
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
