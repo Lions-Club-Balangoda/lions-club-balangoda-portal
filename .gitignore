@@ -19,6 +19,7 @@
 
 # production
 /build
+/dist
 
 # operating systems
 .DS_Store
@@ -35,6 +36,7 @@ yarn-error.log*
 logs/
 *.log
 
+# env files — commit only .env.example, never real secrets
 # environment configuration and secrets
 .env
 .env.*
