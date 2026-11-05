@@ -127,3 +127,4 @@ stateDiagram-v2
 4. **Resolved:** Fix submitted via Pull Request referencing the Jira bug key (`[LBW-XX]`).
 5. **Verified:** QA Lead re-runs the specific failing test case and runs regression checks.
 6. **Closed:** Defect closed and archived in release notes.
+

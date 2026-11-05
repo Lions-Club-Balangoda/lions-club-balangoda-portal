@@ -35,3 +35,4 @@ npm test
 # Run the projects-list vertical slice test directly
 node --experimental-strip-types --test tests/projects-list.test.mjs
 ```
+

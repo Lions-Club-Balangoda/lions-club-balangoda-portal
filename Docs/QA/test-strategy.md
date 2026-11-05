@@ -137,3 +137,4 @@ For the **Sprint 1 Vertical Slice**, testing focuses on the **Community Projects
 - Input sanitization against script injection (`SEC-02`, `SEC-03`).
 
 All initial test cases are formally specified in [`projects-list-test-cases.md`](projects-list-test-cases.md) and backed by the executable test suite in `tests/projects-list.test.mjs`.
+

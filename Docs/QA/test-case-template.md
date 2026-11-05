@@ -149,3 +149,4 @@ Clear search input.
 | **Actual Result** | Script tags safely rendered as inert text. Zero alert execution. |
 | **Associated Bug ID** | N/A |
 | **Severity if Failed** | Critical (P1) |
+

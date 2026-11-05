@@ -33,3 +33,4 @@ export interface ProjectFilterCriteria {
   year?: string | 'ALL';
   status?: ContentStatus | 'ALL';
 }
+
