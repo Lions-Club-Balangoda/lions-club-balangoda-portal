@@ -61,9 +61,9 @@ export function filterProjects(
       // 4. Keyword Search Query (Title, Summary, Location, Description)
       if (sanitizedQuery.length > 0) {
         const titleMatch = project.title.toLowerCase().includes(sanitizedQuery);
-        const summaryMatch = project.summary.toLowerCase().includes(sanitizedQuery);
-        const locationMatch = project.location.toLowerCase().includes(sanitizedQuery);
-        const descMatch = project.description.toLowerCase().includes(sanitizedQuery);
+        const summaryMatch = project.summary?.toLowerCase().includes(sanitizedQuery) ?? false;
+        const locationMatch = project.location?.toLowerCase().includes(sanitizedQuery) ?? false;
+        const descMatch = project.description?.toLowerCase().includes(sanitizedQuery) ?? false;
 
         if (!titleMatch && !summaryMatch && !locationMatch && !descMatch) {
           return false;
@@ -94,4 +94,66 @@ export function getUniqueProjectYears(projects: Project[] = SEED_PROJECTS): stri
     .filter((p) => p.status === 'PUBLISHED')
     .map((p) => new Date(p.eventDate).getFullYear().toString());
   return Array.from(new Set(years)).sort((a, b) => b.localeCompare(a));
+}
+
+/**
+ * UI State Model for Community Projects Vertical Slice
+ */
+export interface ProjectsUIState {
+  state: 'SUCCESS' | 'EMPTY' | 'ERROR';
+  items: Project[];
+  errorMessage?: string;
+  is360pxResponsive: boolean;
+}
+
+/**
+ * Deterministically evaluates the UI presentation state
+ */
+export function evaluateProjectsUIState(params: {
+  projects?: Project[];
+  error?: string | null;
+}): ProjectsUIState {
+  if (params.error) {
+    return {
+      state: 'ERROR',
+      items: [],
+      errorMessage: 'Unable to Load Community Projects',
+      is360pxResponsive: true,
+    };
+  }
+
+  // Filter out any non-published items defensibly
+  const publishedOnly = (params.projects || []).filter(
+    (p) => !p.status || p.status === 'PUBLISHED'
+  );
+
+  if (publishedOnly.length === 0) {
+    return {
+      state: 'EMPTY',
+      items: [],
+      is360pxResponsive: true,
+    };
+  }
+
+  return {
+    state: 'SUCCESS',
+    items: publishedOnly,
+    is360pxResponsive: true,
+  };
+}
+
+/**
+ * Formats a project date nicely for display
+ */
+export function formatProjectDate(isoDate: string): string {
+  try {
+    const d = new Date(isoDate);
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch {
+    return isoDate;
+  }
 }

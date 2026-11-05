@@ -27,6 +27,8 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 *.pem
+*.sqlite*
+.data/
 
 # debug and logs
 npm-debug.log*
