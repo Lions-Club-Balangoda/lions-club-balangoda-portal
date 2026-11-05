@@ -86,6 +86,31 @@ All six members have reviewed, accepted, and signed the team working agreement:
 
 ---
 
+> ## 🎯 PINNED: Requirements Validation & Frozen MVP Scope
+>
+> *Ratified on October 07, 2026, during the formal validation session with Club President Lion Prof. T. Sanjeewa Prasad Jayaweera and Secretary Lion H.M. Bandara. Complete record in [Docs/mvp-scope-specification.md](Docs/mvp-scope-specification.md) and [Docs/requirements-validation-session-minutes.md](Docs/requirements-validation-session-minutes.md).*
+
+### Scope Boundary Summary
+* **Confirmed for MVP (Sprints 1–3):**
+  * `FR-01`: Public homepage (mission, vision, Balangoda charter history, 4 service pillars, dynamic impact counters).
+  * `FR-02`: Searchable community projects archive with service pillar categories and year filter.
+  * `FR-03`: Detailed project narrative with high-resolution responsive lightbox photo gallery.
+  * `FR-04`: Executive board directory filtered by Lionistic administrative year.
+  * `FR-05`: Dedicated volunteer registration (`/volunteer`) and contact forms (`/contact`) with transactional email notifications.
+  * `FR-06`: Code-free Admin CMS for projects, news/announcements, and board records with WYSIWYG editor.
+  * `FR-07`: Submissions review dashboard with status progression and one-click **CSV data export**.
+  * `NFR-01` to `NFR-04`: < 2.5s load time on 4G, WCAG 2.1 AA responsive UI, 99.5% uptime with weekly DB backups, MVC layering.
+  * `SEC-01` to `SEC-05`: TLS/HTTPS, input sanitization against XSS, parameterized queries, bcrypt salt factor 12, CSRF defenses.
+* **Refinements Accepted into Backlog:** Added missing `NEWS_ANNOUNCEMENT` CMS entity, split volunteer intake from general inquiries, and added admin-editable impact counters.
+* **Deferred to Post-MVP (Phase 2):** Direct online payment gateway (bank wire transfer coordinates used for MVP), multi-language Sinhala/Tamil localization, public discussion commenting, and SMS gateway.
+* **Club-Supplied Data Owners:**
+  * Balangoda Charter History & Board Directory: Lion H.M. Bandara (Secretary) — *Due Oct 16 / Oct 20*
+  * High-Res Brand Logos & Crests: Lion Prof. T. Sanjeewa Prasad Jayaweera (President) — *Delivered*
+  * Flagship Project Archives (5–10 initiatives): Lion Dr. R.M. Senarathne (Project Chair) — *Due Oct 23*
+  * Bank Wire Coordinates & Domain Hosting Budget: Lion K.G. Wijeratne (Treasurer) — *Due Oct 19 / Oct 23*
+
+---
+
 ## 🛠️ Getting Started
 
 ### Prerequisites
@@ -115,6 +140,9 @@ Visit [http://localhost:3000](http://localhost:3000) to view the portal.
 
 ## 📚 Project Documentation Directory
 
+- **Requirements Validation Minutes:** [Docs/requirements-validation-session-minutes.md](Docs/requirements-validation-session-minutes.md)
+- **MVP Scope Freeze Specification:** [Docs/mvp-scope-specification.md](Docs/mvp-scope-specification.md)
+- **Product Backlog & Scope Traceability:** [Docs/product-backlog.md](Docs/product-backlog.md)
 - **Scrum Working Agreement:** [Docs/scrum-working-agreement.md](Docs/scrum-working-agreement.md)
 - **Ceremonies & Milestone Calendar:** [Docs/team-calendar.md](Docs/team-calendar.md)
 - **DoR & DoD Actionable Checklists:** [Docs/dor-dod-checklist.md](Docs/dor-dod-checklist.md)
