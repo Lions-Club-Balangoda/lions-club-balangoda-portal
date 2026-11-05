@@ -95,3 +95,86 @@ In addition to Section 3.1, deliverables in Sprint 3 and final handover must ful
 - [ ] **Documentation Delivery:** Administrative Operations Manual and CMS User Guide delivered to club officers.
 - [ ] **Training Conducted:** Hands-on onboarding session conducted for non-technical club editors.
 - [ ] **Disaster Recovery & Backup:** Weekly automated database backup scheduled and verified.
+
+
+---
+
+## 4. Rotating Coordination Roles (Sprints 1–3)
+
+Coordination roles rotate every sprint to prevent leadership fatigue, eliminate hierarchical barriers, and promote cross-functional mastery. 
+
+> [!IMPORTANT]
+> **Coordination Roles Are NOT Implementation Silos:**
+> Holding a coordination role does **not** exempt a member from core engineering. Every team member implements features, authors database/API code, and writes automated tests every sprint. Coordinators steward quality standards and unblock peers.
+
+### 4.1 Rotating Coordination Matrix
+
+| Coordination Role | Sprint 1 | Sprint 2 | Sprint 3 |
+|---|---|---|---|
+| **Sprint Facilitation & Stakeholder Coordination** | **Yoosuf** (22FIS0519) | **Zeenath** (22FIS0593) | **Jinos** (22FIS0572) |
+| **Backlog Quality & Requirements Traceability** | **Asmad** (22FIS0543) | **Yoosuf** (22FIS0519) | **Zeenath** (22FIS0593) |
+| **Technical Architecture & Integration** | **Nafris** (22FIS0545) | **Asmad** (22FIS0543) | **Yoosuf** (22FIS0519) |
+| **Testing Strategy & Acceptance Criteria** | **Ahnaf** (22FIS0569) | **Nafris** (22FIS0545) | **Asmad** (22FIS0543) |
+| **UI/UX Consistency & Usability Review** | **Jinos** (22FIS0572) | **Ahnaf** (22FIS0569) | **Nafris** (22FIS0545) |
+| **Deployment Readiness & Documentation** | **Zeenath** (22FIS0593) | **Jinos** (22FIS0572) | **Ahnaf** (22FIS0569) |
+
+```mermaid
+graph LR
+    subgraph "Sprint 1 Stewardship"
+        Y1["Yoosuf: Facilitation"]
+        A1["Asmad: Backlog Quality"]
+        N1["Nafris: Architecture"]
+        Ah1["Ahnaf: Test Strategy"]
+        J1["Jinos: UI/UX Consistency"]
+        Z1["Zeenath: Deployment/Docs"]
+    end
+    subgraph "Sprint 2 Stewardship"
+        Z2["Zeenath: Facilitation"]
+        Y2["Yoosuf: Backlog Quality"]
+        A2["Asmad: Architecture"]
+        N2["Nafris: Test Strategy"]
+        Ah2["Ahnaf: UI/UX Consistency"]
+        J2["Jinos: Deployment/Docs"]
+    end
+    subgraph "Sprint 3 Stewardship"
+        J3["Jinos: Facilitation"]
+        Z3["Zeenath: Backlog Quality"]
+        Y3["Yoosuf: Architecture"]
+        A3["Asmad: Test Strategy"]
+        N3["Nafris: UI/UX Consistency"]
+        Ah3["Ahnaf: Deployment/Docs"]
+    end
+    Y1 --> Y2 --> Y3
+```
+
+### 4.2 Responsibilities of Each Coordination Role
+
+1. **Sprint Facilitation & Stakeholder Coordination:**
+   - Facilitates Daily Standups (strictly 15 minutes), Sprint Planning, Sprint Review, and Retrospectives.
+   - Shields the development team from external scope churn; maintains active liaison with Supervisor (Mr. K.P.D.P. Patabandi) and Client (Lion Prof. T. Sanjeewa Prasad Jayaweera).
+   - Identifies and tracks impediment removal; ensures team velocity is measured.
+
+2. **Backlog Quality & Requirements Traceability:**
+   - Enforces the Definition of Ready (DoR); verifies that incoming Jira issues carry testable acceptance criteria and correct `LBW-XX` issue tags.
+   - Maintains the Requirements Traceability Matrix (RTM) linking FR-01 through FR-07 to user stories and database entities.
+   - Flags orphaned backlog items or scope drift during refinement sessions.
+
+3. **Technical Architecture & Integration:**
+   - Stewards the technical alignment across Next.js 16 App Router, TypeScript contracts, database migrations, and Cloudinary CDN configurations.
+   - Monitors PR merges for branch divergence, migration collisions, or violations of MVC layering.
+   - Coordinates pairing/mobbing sessions for complex full-stack vertical slices.
+
+4. **Testing Strategy & Acceptance Criteria:**
+   - Enforces the Quality Assurance strategy (`Docs/QA/test-strategy.md`) and bug severity gates (`Docs/QA/bug-severity-scale.md`).
+   - Ensures that automated unit/integration tests accompany new feature PRs and that regressions are prevented.
+   - Audits PR test coverage and verifies compliance with acceptance criteria before merge approval.
+
+5. **UI/UX Consistency & Usability Review:**
+   - Ensures visual fidelity to Lions Clubs International brand guidelines (official gold and blue palette, typography, responsive breakpoints).
+   - Verifies responsive layout integrity from mobile (360px) to desktop (1920px) and WCAG 2.1 AA color contrast compliance.
+   - Audits non-technical administrative screens to guarantee user-friendly error messages and confirmation patterns.
+
+6. **Deployment Readiness & Documentation:**
+   - Verifies environment configurations (`.env.example` vs `.env.local`), build success (`npm run build`), and deployment pipeline health.
+   - Stewards documentation accuracy across `Docs/`, API contracts, and user guides.
+   - Oversees database backup verifications and security hygiene (e.g., zero secrets committed to VCS).
