@@ -61,9 +61,9 @@ export function filterProjects(
       // 4. Keyword Search Query (Title, Summary, Location, Description)
       if (sanitizedQuery.length > 0) {
         const titleMatch = project.title.toLowerCase().includes(sanitizedQuery);
-        const summaryMatch = project.summary.toLowerCase().includes(sanitizedQuery);
-        const locationMatch = project.location.toLowerCase().includes(sanitizedQuery);
-        const descMatch = project.description.toLowerCase().includes(sanitizedQuery);
+        const summaryMatch = project.summary?.toLowerCase().includes(sanitizedQuery) ?? false;
+        const locationMatch = project.location?.toLowerCase().includes(sanitizedQuery) ?? false;
+        const descMatch = project.description?.toLowerCase().includes(sanitizedQuery) ?? false;
 
         if (!titleMatch && !summaryMatch && !locationMatch && !descMatch) {
           return false;
