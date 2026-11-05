@@ -1,5 +1,5 @@
-import { Project, ProjectFilterCriteria } from '../types/project';
-import { SEED_PROJECTS } from '../data/mock-projects';
+import type { Project, ProjectFilterCriteria } from '../types/project.ts';
+import { SEED_PROJECTS } from '../data/mock-projects.ts';
 
 /**
  * Sanitizes input query string against XSS injection
