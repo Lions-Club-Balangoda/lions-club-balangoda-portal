@@ -75,3 +75,4 @@ Dependabot will open weekly PRs for outdated packages. These PRs:
 - Run through the full CI pipeline automatically.
 - Must receive one approval before merging (same rule as team PRs).
 - Minor and patch updates are grouped into a single PR to reduce noise.
+

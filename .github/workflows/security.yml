@@ -69,3 +69,4 @@ jobs:
           # GITLEAKS_LICENSE is only required for private repos on the paid plan.
           # For public repos or the free tier this env var can be omitted.
           # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
