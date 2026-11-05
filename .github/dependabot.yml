@@ -1,0 +1,48 @@
+# ==============================================================================
+# Dependabot Configuration
+# Automatically opens PRs to keep dependencies up to date.
+#
+# - npm packages: checked weekly (Mondays)
+# - GitHub Actions: checked weekly (Mondays)
+#
+# PRs are labelled "dependencies" and assigned to the team lead for review.
+# Dependabot PRs still run through the CI workflow before they can be merged.
+# ==============================================================================
+
+version: 2
+
+updates:
+  # ── npm / Node.js dependencies ───────────────────────────────────────────────
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Colombo'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'chore(deps)'
+    # Group all minor and patch updates into one PR to reduce noise.
+    groups:
+      minor-and-patch:
+        update-types:
+          - 'minor'
+          - 'patch'
+
+  # ── GitHub Actions ───────────────────────────────────────────────────────────
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Colombo'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'chore(ci)'
