@@ -6,7 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:migrate": "node --experimental-strip-types scripts/migrate.ts",
+    "db:seed": "node --experimental-strip-types scripts/seed.ts",
+    "server:dev": "node --experimental-strip-types --watch server/index.ts",
+    "server:build": "tsc --project tsconfig.server.json",
+    "test": "node --experimental-strip-types --test tests/projects-list.test.mjs"
   },
   "dependencies": {
     "next": "16.4.2",
@@ -20,6 +28,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "prettier": "^3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
