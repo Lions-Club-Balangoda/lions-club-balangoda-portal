@@ -201,3 +201,4 @@ The `main` branch is protected by repository rules:
 2. **Role Boundaries:** Respect module allocations (Frontend, Backend, Database, CMS, QA) agreed upon in the project proposal.
 3. **Prompt Reviews:** Respond to review requests from teammates within 24 hours to prevent development bottlenecks.
 4. **Verification Before PR:** Run `npm run lint` and `npm run build` locally before requesting a review.
+
