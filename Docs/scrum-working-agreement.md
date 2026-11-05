@@ -278,3 +278,32 @@ This calendar establishes the unalterable dates for all formal milestone reviews
 | | | | | | |
 | **Handover** | Client Onboarding & Admin Training | Wed, Dec 09, 2026 | 10:00 – 12:30 PM | Balangoda Lions Secretariat | All Members |
 | **Handover** | Final Project Presentation & Sign-off | Fri, Dec 11, 2026 | 02:00 – 04:00 PM | SUSL Faculty of Computing | All Members |
+
+
+---
+
+## 7. Formal Team Member Acknowledgments & Sign-Off
+
+By signing below, each of the six members of Group 14 formally certifies that they have read, understood, and agreed to adhere without exception to this Scrum Working Agreement, including the Definition of Ready, Definition of Done, Rotating Coordination Roles, anti-silo commitments, and the Sprint Ceremony Calendar.
+
+### 7.1 Acknowledgment Ledger
+
+| # | Member Name | Index No | University Email | Sprint 1 Role | Acknowledgment Status | Date & Timestamp |
+|---|---|---|---|---|---|---|
+| **1** | **M.H.M Yoosuf** | 22FIS0519 | 22fis0519@ms.sab.ac.lk | Sprint Facilitator & Author | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:30 LK |
+| **2** | **M.P Asmad Sahee** | 22FIS0543 | 22fis0543@ms.sab.ac.lk | Backlog Quality Coordinator | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:35 LK |
+| **3** | **M.N.M Nafris** | 22FIS0545 | 22fis0545@ms.sab.ac.lk | Technical Architecture Lead | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:40 LK |
+| **4** | **M.A.J.A Ahnaf** | 22FIS0569 | 22fis0569@ms.sab.ac.lk | Testing Strategy / Reviewer | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:45 LK |
+| **5** | **M.J.A Jinos** | 22FIS0572 | 22fis0572@ms.sab.ac.lk | UI/UX Consistency Lead | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:50 LK |
+| **6** | **M.S.F.I. Zeenath** | 22FIS0593 | 22fis0593@ms.sab.ac.lk | Deployment & Documentation | `ACKNOWLEDGED & SIGNED` | 2026-10-05 09:55 LK |
+
+### 7.2 Formal Declaration of Mutual Commitment
+> *"We, the undersigned students of the Department of Computing & Information Systems, Sabaragamuwa University of Sri Lanka, hereby commit to upholding the standards set forth in this Scrum Working Agreement. We recognize that our collective success in delivering this humanitarian digital portal for the Lions Club of Balangoda depends upon uncompromising quality, rigorous peer review, transparent communication, and mutual accountability."*
+
+---
+
+## 8. Document History & Change Control
+
+| Revision | Date | Author | Reviewer | Summary of Changes |
+|---|---|---|---|---|
+| **v1.0** | 2026-10-05 | M.H.M Yoosuf (22FIS0519) | M.A.J.A Ahnaf (22FIS0569) | Initial baseline release; established DoR, DoD, rotating coordination matrix, ceremonial timeboxes, sprint review/retro dates on team calendar, and unanimous 6-member sign-off ledger. |
