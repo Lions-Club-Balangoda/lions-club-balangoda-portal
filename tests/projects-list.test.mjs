@@ -7,8 +7,8 @@ import {
   getProjectBySlug,
   getUniqueProjectYears,
   sanitizeSearchQuery,
-} from '../src/lib/projects.js';
-import { SEED_PROJECTS } from '../src/data/mock-projects.js';
+} from '../src/lib/projects.ts';
+import { SEED_PROJECTS } from '../src/data/mock-projects.ts';
 
 describe('Projects List Vertical Slice (FR-02, UC02) Test Suite', () => {
   it('TC-PROJ-001: Initial load returns all published projects and excludes drafts', () => {
@@ -66,10 +66,11 @@ describe('Projects List Vertical Slice (FR-02, UC02) Test Suite', () => {
   });
 
   it('TC-PROJ-004: Keyword search matches project location and summary', () => {
-    // Search by location: "Hospital"
-    const hospitalResults = filterProjects(SEED_PROJECTS, { query: 'Hospital' });
-    assert.strictEqual(hospitalResults.length, 1);
-    assert.strictEqual(hospitalResults[0].location, 'Balangoda Base Hospital');
+    // Search by specific location: "Medadumbara"
+    const medadumbaraResults = filterProjects(SEED_PROJECTS, { query: 'Medadumbara' });
+    assert.strictEqual(medadumbaraResults.length, 1);
+    assert.strictEqual(medadumbaraResults[0].slug, 'school-supplies-book-donation-drive-2026');
+    assert.ok(medadumbaraResults[0].location.includes('Medadumbara'));
 
     // Search by location: "Kaltota"
     const kaltotaResults = filterProjects(SEED_PROJECTS, { query: 'Kaltota' });
