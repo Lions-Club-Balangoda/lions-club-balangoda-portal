@@ -96,3 +96,4 @@ To ensure officers understand the publication state of any content at a glance, 
 - **`PENDING` (Volunteer Signup):** Blue Warning Pill (`bg-blue-100 text-blue-800`).
 - **`NEW` (Public Inquiry):** Indigo Notification Pill (`bg-indigo-100 text-indigo-800`).
 - **`RESOLVED` (Public Inquiry):** Gray Checkmark Pill (`bg-gray-100 text-gray-600`).
+

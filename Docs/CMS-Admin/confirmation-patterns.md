@@ -143,3 +143,4 @@ Therefore, the Lions Club of Balangoda CMS enforces a **strict architectural and
 2. **Clear Alternatives Offered:** Delete modal explicitly informs officers: *"If you only want to hide this item, use Unpublish instead."*
 3. **No Hidden Cascade Losses:** If deleting a project will remove gallery photos, the exact photo count is displayed in the warning dialog.
 4. **Zero Double-Clicks:** All confirmation buttons automatically disable upon first click to prevent race conditions or duplicate network dispatches.
+

@@ -471,3 +471,4 @@ flowchart TD
 2. **Read Inquiry (`WF-SUB-06`):** Opens inquiry detail screen (`SCR-18`). Displays Sender Name, Email, Phone, Organization Name (for sponsors), Subject, and full Message text.
 3. **Update Status (`WF-SUB-07`):** Officer updates status from `NEW` to `IN_PROGRESS` or `RESOLVED`, or flags as `SPAM`. Records internal resolution note (e.g., *"President replied via official club email with sponsorship package on Nov 5"*).
 4. **Export Inquiries (`WF-SUB-08`):** Generates `lions_inquiries_YYYYMMDD.csv` for executive committee meetings.
+

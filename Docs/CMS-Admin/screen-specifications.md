@@ -506,3 +506,4 @@
 - **Success Feedback:** Modal closes; status badge on item transitions from green `PUBLISHED` to amber `DRAFT`; toast appears: *"'[Item Title]' has been unpublished and moved to Drafts."*
 - **Error Feedback:** If request fails, displays: *"Could not unpublish. Please check your connection."*
 - **Navigation After Completion:** Remains on the current editor or detail screen with status refreshed.
+
