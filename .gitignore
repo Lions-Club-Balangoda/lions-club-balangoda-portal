@@ -21,7 +21,7 @@
 /build
 /dist
 
-# misc
+# operating systems
 .DS_Store
 Thumbs.db
 ehthumbs.db
@@ -37,6 +37,7 @@ logs/
 *.log
 
 # env files — commit only .env.example, never real secrets
+# environment configuration and secrets
 .env
 .env.*
 !.env.example
