@@ -22,3 +22,4 @@ export function validateEnv(): void {
     process.exit(1);
   }
 }
+
