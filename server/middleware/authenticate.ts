@@ -12,6 +12,7 @@
 import type { Request, Response, NextFunction } from 'express';
 
 // Extend the Express Request type to include the authenticated user.
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Express {
     interface Request {
@@ -22,6 +23,7 @@ declare global {
     }
   }
 }
+/* eslint-enable @typescript-eslint/no-namespace */
 
 export function authenticate(req: Request, res: Response, next: NextFunction): void {
   // TODO: implement JWT / session verification here.
