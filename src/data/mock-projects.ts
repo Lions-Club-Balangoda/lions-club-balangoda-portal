@@ -1,4 +1,4 @@
-import { Project } from '../types/project';
+import type { Project } from '../types/project.ts';
 
 /**
  * Seed projects for the Lions Club of Balangoda Web Portal
