@@ -178,3 +178,103 @@ graph LR
    - Verifies environment configurations (`.env.example` vs `.env.local`), build success (`npm run build`), and deployment pipeline health.
    - Stewards documentation accuracy across `Docs/`, API contracts, and user guides.
    - Oversees database backup verifications and security hygiene (e.g., zero secrets committed to VCS).
+
+
+---
+
+## 5. Scrum Ceremonies & Protocol
+
+All ceremonies are strictly timeboxed and mandatory for all six team members.
+
+### 5.1 Ceremony Definitions & Structure
+
+```
+                    ┌────────────────────────────────────────┐
+                    │       Sprint Planning (2h, Day 1)      │
+                    └───────────────────┬────────────────────┘
+                                        │
+                                        ▼
+      ┌──────────────────────────────────────────────────────────────────┐
+      │  Daily Scrum (15m, M-F 08:30) & Weekly Refinement (1h, Wed 17:00) │
+      └─────────────────────────────────┬────────────────────────────────┘
+                                        │
+                    ┌───────────────────┴────────────────────┐
+                    ▼                                        ▼
+┌──────────────────────────────────────┐ ┌──────────────────────────────────────┐
+│     Sprint Review (1.5h, Final Day)  │ │   Sprint Retrospective (1h, Final Day)│
+│       Demonstration & Validation     │ │        Continuous Improvement        │
+└──────────────────────────────────────┘ └──────────────────────────────────────┘
+```
+
+1. **Sprint Planning:**
+   - **Timing:** First Monday of each sprint (09:00 AM – 11:00 AM).
+   - **Facilitator:** Rotating Sprint Facilitator.
+   - **Inputs:** Prioritized Product Backlog, completed DoR checklists, team capacity.
+   - **Outputs:** Agreed Sprint Goal and committed Sprint Backlog in Jira.
+
+2. **Daily Scrum (Standup):**
+   - **Timing:** Monday through Friday at 08:30 AM – 08:45 AM (Strict 15-minute timebox).
+   - **Platform:** Discord / Google Meet voice channel.
+   - **Agenda:** Each member answers three standard questions:
+     1. *What did I accomplish yesterday that unblocked the sprint goal?*
+     2. *What will I implement today to advance the sprint backlog?*
+     3. *Are there any blockers, architectural ambiguities, or dependencies impeding my work?*
+   - Any discussion requiring more than 2 minutes is parked for a post-standup breakout topic.
+
+3. **Backlog Refinement (Grooming):**
+   - **Timing:** Mid-sprint every Wednesday at 05:00 PM – 06:00 PM (1 hour).
+   - **Facilitator:** Rotating Backlog Quality Coordinator.
+   - **Agenda:** Review candidate stories for upcoming sprints, decompose stories exceeding 8 points, verify DoR readiness, and validate technical dependencies.
+
+4. **Sprint Review (Demo & Stakeholder Inspection):**
+   - **Timing:** Final Friday of each sprint at 02:00 PM – 03:30 PM (1.5 hours).
+   - **Attendees:** All six team members, Internal Supervisor (Mr. K.P.D.P. Patabandi), and Client Representatives (Lions Club of Balangoda).
+   - **Agenda:** Live demonstration of completed, working vertical slices on staging; verification against DoD; gathering client and supervisor feedback.
+
+5. **Sprint Retrospective:**
+   - **Timing:** Final Friday of each sprint at 04:00 PM – 05:00 PM (1 hour, following Review).
+   - **Attendees:** Internal team members only.
+   - **Agenda:** Structured review using "Start, Stop, Continue"; analysis of velocity metrics and escaped defects; assignment of 1–3 concrete process improvement action items for the next sprint.
+
+---
+
+## 6. Official Team Calendar (Sprints 1–3)
+
+This calendar establishes the unalterable dates for all formal milestone reviews and retrospectives across the project lifecycle.
+
+### 6.1 Sprint Dates Overview
+
+| Sprint | Phase Focus | Start Date | End Date | Duration |
+|---|---|---|---|---|
+| **Sprint 1** | Inception, DB Architecture, QA Strategy & CMS Specs | Monday, Oct 05, 2026 | Friday, Oct 23, 2026 | 3 Weeks |
+| **Sprint 2** | Core Architecture, Public Portal & Data Services | Monday, Oct 26, 2026 | Friday, Nov 13, 2026 | 3 Weeks |
+| **Sprint 3** | Admin CMS Implementation, End-to-End Integration & UAT | Monday, Nov 16, 2026 | Friday, Dec 04, 2026 | 3 Weeks |
+| **Handover** | Production Deployment, Client Training & Final Sign-off | Monday, Dec 07, 2026 | Friday, Dec 11, 2026 | 1 Week |
+
+### 6.2 Key Ceremony Schedule: Sprint Review & Retrospective Dates
+
+> [!IMPORTANT]
+> The table below records the confirmed team calendar milestone dates. All members and stakeholders are synchronized with these calendar events:
+
+| Sprint | Event | Date | Time | Location / Channel | Lead Facilitator |
+|---|---|---|---|---|---|
+| **Sprint 1** | Sprint 1 Planning | Mon, Oct 05, 2026 | 09:00 – 11:00 AM | Lab 02 / Google Meet | Yoosuf |
+| **Sprint 1** | Backlog Refinement 1 | Wed, Oct 14, 2026 | 05:00 – 06:00 PM | Discord Stage | Asmad |
+| **Sprint 1** | Backlog Refinement 2 | Wed, Oct 21, 2026 | 05:00 – 06:00 PM | Discord Stage | Asmad |
+| **Sprint 1** | **Sprint 1 Review (Demo)** | **Fri, Oct 23, 2026** | **02:00 – 03:30 PM** | **Faculty Boardroom / Meet** | **Yoosuf** |
+| **Sprint 1** | **Sprint 1 Retrospective** | **Fri, Oct 23, 2026** | **04:00 – 05:00 PM** | **Discord Private Room** | **Yoosuf** |
+| | | | | | |
+| **Sprint 2** | Sprint 2 Planning | Mon, Oct 26, 2026 | 09:00 – 11:00 AM | Lab 02 / Google Meet | Zeenath |
+| **Sprint 2** | Backlog Refinement 1 | Wed, Nov 04, 2026 | 05:00 – 06:00 PM | Discord Stage | Yoosuf |
+| **Sprint 2** | Backlog Refinement 2 | Wed, Nov 11, 2026 | 05:00 – 06:00 PM | Discord Stage | Yoosuf |
+| **Sprint 2** | **Sprint 2 Review (Demo)** | **Fri, Nov 13, 2026** | **02:00 – 03:30 PM** | **Faculty Boardroom / Meet** | **Zeenath** |
+| **Sprint 2** | **Sprint 2 Retrospective** | **Fri, Nov 13, 2026** | **04:00 – 05:00 PM** | **Discord Private Room** | **Zeenath** |
+| | | | | | |
+| **Sprint 3** | Sprint 3 Planning | Mon, Nov 16, 2026 | 09:00 – 11:00 AM | Lab 02 / Google Meet | Jinos |
+| **Sprint 3** | Backlog Refinement 1 | Wed, Nov 25, 2026 | 05:00 – 06:00 PM | Discord Stage | Zeenath |
+| **Sprint 3** | Backlog Refinement 2 | Wed, Dec 02, 2026 | 05:00 – 06:00 PM | Discord Stage | Zeenath |
+| **Sprint 3** | **Sprint 3 Review (Demo)** | **Fri, Dec 04, 2026** | **02:00 – 03:30 PM** | **Balangoda Lions Club / Meet** | **Jinos** |
+| **Sprint 3** | **Sprint 3 Retrospective** | **Fri, Dec 04, 2026** | **04:00 – 05:00 PM** | **Discord Private Room** | **Jinos** |
+| | | | | | |
+| **Handover** | Client Onboarding & Admin Training | Wed, Dec 09, 2026 | 10:00 – 12:30 PM | Balangoda Lions Secretariat | All Members |
+| **Handover** | Final Project Presentation & Sign-off | Fri, Dec 11, 2026 | 02:00 – 04:00 PM | SUSL Faculty of Computing | All Members |
