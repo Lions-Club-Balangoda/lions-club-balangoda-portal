@@ -3,12 +3,7 @@
  * Aligned with Database Schema Specification (Docs/database-schema-specification.md)
  */
 
-export type ServicePillar =
-  | 'HEALTHCARE'
-  | 'EDUCATION'
-  | 'ENVIRONMENT'
-  | 'POVERTY_RELIEF'
-  | 'OTHER';
+export type ServicePillar = 'HEALTHCARE' | 'EDUCATION' | 'ENVIRONMENT' | 'POVERTY_RELIEF' | 'OTHER';
 
 export type ContentStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 

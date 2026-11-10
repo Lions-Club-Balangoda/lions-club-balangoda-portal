@@ -17,9 +17,6 @@
     "test": "node --experimental-strip-types --test tests/projects-api.test.mjs tests/projects-ui.test.mjs tests/projects-list.test.mjs tests/projects-search.test.mjs tests/auth-password.test.mjs tests/secrets-scan.test.mjs"
   },
   "dependencies": {
-    "next": "16.4.4",
-    "react": "19.3.1",
-    "react-dom": "19.3.1"
     "bcryptjs": "^3.0.3",
     "next": "16.4.5",
     "react": "19.3.1",
@@ -28,13 +25,13 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^10",
+    "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "prettier": "^3",
     "tailwindcss": "^4",
-    "typescript": "^7"
+    "typescript": "^5"
   }
 }
