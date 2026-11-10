@@ -32,3 +32,4 @@ Docs/
 # Editor and configuration
 .vscode/
 .github/
+.gitleaks.toml

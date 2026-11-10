@@ -1,0 +1,10 @@
+# ==============================================================================
+# Gitleaks Configuration
+# ==============================================================================
+title = "Gitleaks Configuration for Lions Club Balangoda Portal"
+
+[allowlist]
+description = "Ignore synthetic/mock credentials in automated test files"
+paths = [
+  '''tests/.*'''
+]

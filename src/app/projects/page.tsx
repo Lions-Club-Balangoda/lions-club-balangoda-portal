@@ -38,16 +38,15 @@ export default async function ProjectsPage() {
             Our Community Service Projects
           </h1>
           <p className="mt-2.5 max-w-3xl text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Preserving our humanitarian service legacy across Balangoda, Medadumbara, and Kaltota. Browse verified service activities in healthcare, education, environmental protection, and poverty relief.
+            Preserving our humanitarian service legacy across Balangoda, Medadumbara, and Kaltota.
+            Browse verified service activities in healthcare, education, environmental protection,
+            and poverty relief.
           </p>
         </header>
 
         {/* Main Projects List Container */}
         <main className="w-full max-w-full min-w-0">
-          <ProjectsList
-            initialProjects={initialProjects}
-            initialError={initialError}
-          />
+          <ProjectsList initialProjects={initialProjects} initialError={initialError} />
         </main>
       </div>
     </div>

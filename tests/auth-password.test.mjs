@@ -109,7 +109,10 @@ describe('Password Hashing & Security Policy Test Suite (SEC-04)', () => {
       assert.strictEqual(await verifyPassword('Password123!', ''), false);
       assert.strictEqual(await verifyPassword('Password123!', 'invalid-hash'), false);
       assert.strictEqual(await verifyPassword('Password123!', '$2b$12$tooshort'), false);
-      assert.strictEqual(await verifyPassword('', '$2b$12$zyuUFqLkNFIuVXWNsajKKemoOujmhWN0Sx9hyipOaswocgPSr0FFK'), false);
+      assert.strictEqual(
+        await verifyPassword('', '$2b$12$zyuUFqLkNFIuVXWNsajKKemoOujmhWN0Sx9hyipOaswocgPSr0FFK'),
+        false
+      );
     });
 
     it('detects when an older hash needs re-hashing to match target cost', () => {
@@ -190,7 +193,9 @@ describe('Password Hashing & Security Policy Test Suite (SEC-04)', () => {
 
       const whitespaceResult = validatePasswordPolicy('     ');
       assert.strictEqual(whitespaceResult.valid, false);
-      assert.ok(whitespaceResult.errors.some((e) => e.includes('empty or contain only whitespace')));
+      assert.ok(
+        whitespaceResult.errors.some((e) => e.includes('empty or contain only whitespace'))
+      );
 
       const nullResult = validatePasswordPolicy(null);
       assert.strictEqual(nullResult.valid, false);
@@ -235,4 +240,3 @@ describe('Password Hashing & Security Policy Test Suite (SEC-04)', () => {
     });
   });
 });
-
