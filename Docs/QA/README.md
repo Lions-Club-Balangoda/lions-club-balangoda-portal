@@ -21,6 +21,8 @@ This directory contains the complete Quality Assurance strategy, test case templ
 | [test-case-template.md](test-case-template.md) | **Standardized Test Case Template:** Reusable template for authoring manual and automated test specifications with field guidelines and concrete examples. |
 | [bug-severity-scale.md](bug-severity-scale.md) | **Bug Severity Scale & Release Gate Policy:** Formal definitions of Critical (P1), High (P2), Medium (P3), and Low (P4) severities, detailing exactly what blocks release. |
 | [projects-list-test-cases.md](projects-list-test-cases.md) | **Initial Test Cases (Projects List Slice):** 12 formal test specifications with execution verification for the Community Projects search and filtering vertical slice (`FR-02`). |
+| [projects-search-test-cases.md](projects-search-test-cases.md) | **Keyword Search Test Cases (Sprint 2):** 17 formal test specifications with execution verification covering AC1–AC6 for the published projects search slice. |
+| [password-and-secrets-specification.md](password-and-secrets-specification.md) | **Password Hashing & Secrets Management (SEC-04):** 27 formal test specifications verifying salted bcrypt hashing (work factor >= 10), server-side password policy, secret scanning, and `.env.example` governance. |
 
 ---
 
