@@ -152,8 +152,8 @@ export const SECRET_SCAN_PATTERNS = [
   // 1. Database URLs with real passwords (e.g. postgresql://user:realpassword@host:port/db)
   {
     name: 'Embedded Database Password in Connection URI',
-    regex: /(?:postgres(?:ql)?|mysql):\/\/[^:\s]+:[^@\s]+@[a-zA-Z0-9.-]+(?::\d+)?\/[^\s'"]+/i,
-    ignorePlaceholders: ['db_password', 'password', '<password>', 'your_password'],
+    regex: /(?:postgres(?:ql)?|mysql):\/\/[^:\s]+:([^@\s]+)@[a-zA-Z0-9.-]+(?::\d+)?\/[^\s'"]+/i,
+    ignorePlaceholders: [':db_password@', ':password@', ':<password>@', ':your_password@', ':db_pass@'],
   },
   // 2. Private RSA / EC / PGP keys
   {
