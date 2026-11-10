@@ -1,5 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import { getDatabase, query } from './db.ts';
+import { sanitizeSearchQuery } from './projects.ts';
 import type { Project, ContentStatus } from '../types/project.ts';
 
 interface RawProjectRow {
@@ -19,18 +20,30 @@ interface RawProjectRow {
   updatedAt: string;
 }
 
+export interface SearchProjectsCriteria {
+  query?: string;
+  category?: string;
+  year?: string;
+}
+
 /**
- * Retrieves all published projects from the database via a strictly parameterised query.
+ * Searches and filters published projects from the database via strictly parameterised SQL.
+ * 
  * Acceptance criteria:
- * - Given published projects exist, each project's title, category, date, and cover image are listed.
- * - Given a project is unpublished or draft, then it never appears in the public list or API response.
- * - Data comes from the database through a parameterised query.
- * - When database fails, throws a sanitized error without exposing raw SQL or stack traces.
+ * - Visitors can search published projects by keyword across title and summary.
+ * - Search input is sanitised and queries are parameterised.
+ * - Search works together with category and year filters.
+ * - Only published projects are returned (DRAFT and ARCHIVED items are strictly blocked).
+ * - Safe error handling: no raw SQL or stack traces exposed on failure.
  */
-export function getPublishedProjects(customDb?: DatabaseSync): Project[] {
+export function searchPublishedProjects(
+  criteria: SearchProjectsCriteria = {},
+  customDb?: DatabaseSync
+): Project[] {
   try {
     const db = customDb || getDatabase();
-    const sql = `
+
+    let sql = `
       SELECT
         project_id AS id,
         title,
@@ -48,11 +61,35 @@ export function getPublishedProjects(customDb?: DatabaseSync): Project[] {
         updated_at AS updatedAt
       FROM projects
       WHERE status = ?
-      ORDER BY event_date DESC
     `;
 
-    // Strictly parameterised query: status must match 'PUBLISHED'
-    const rows = query<RawProjectRow>(sql, ['PUBLISHED'], db);
+    // Strictly parameterised query: status is always 'PUBLISHED'
+    const params: (string | number | bigint | null | Uint8Array)[] = ['PUBLISHED'];
+
+    // 1. Category Filter (Parameterised)
+    if (criteria.category && criteria.category !== 'ALL') {
+      sql += ` AND category = ?`;
+      params.push(criteria.category);
+    }
+
+    // 2. Year Filter (Parameterised)
+    if (criteria.year && criteria.year !== 'ALL' && /^\d{4}$/.test(criteria.year)) {
+      sql += ` AND event_date LIKE ?`;
+      params.push(`${criteria.year}-%`);
+    }
+
+    // 3. Keyword Search across Title and Summary (Sanitised & Parameterised)
+    if (criteria.query && criteria.query.trim()) {
+      const sanitized = sanitizeSearchQuery(criteria.query);
+      if (sanitized.length > 0) {
+        sql += ` AND (title LIKE ? OR summary LIKE ?)`;
+        params.push(`%${sanitized}%`, `%${sanitized}%`);
+      }
+    }
+
+    sql += ` ORDER BY event_date DESC`;
+
+    const rows = query<RawProjectRow>(sql, params, db);
 
     return rows.map((row) => ({
       id: row.id,
@@ -71,13 +108,24 @@ export function getPublishedProjects(customDb?: DatabaseSync): Project[] {
       updatedAt: row.updatedAt,
     }));
   } catch (err: unknown) {
-    // Log error internally on server without exposing details
     const message = err instanceof Error ? err.message : String(err);
-    console.error('[ProjectsRepository] Error executing query:', message);
-    
-    // Throw clean, sanitized error with no SQL query or stack trace
+    console.error('[ProjectsRepository] Error executing search query:', message);
     throw new Error('Database operation failed');
   }
+}
+
+/**
+ * Retrieves published projects with optional filter criteria or custom database instance.
+ * Fully backwards-compatible with getPublishedProjects(customDb).
+ */
+export function getPublishedProjects(
+  criteriaOrDb?: SearchProjectsCriteria | DatabaseSync,
+  customDb?: DatabaseSync
+): Project[] {
+  if (criteriaOrDb && typeof (criteriaOrDb as DatabaseSync).prepare === 'function') {
+    return searchPublishedProjects({}, criteriaOrDb as DatabaseSync);
+  }
+  return searchPublishedProjects((criteriaOrDb as SearchProjectsCriteria) || {}, customDb);
 }
 
 /**
