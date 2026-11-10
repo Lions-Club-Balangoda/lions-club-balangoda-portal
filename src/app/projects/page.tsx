@@ -10,9 +10,6 @@ export const metadata: Metadata = {
     'Explore verified humanitarian service projects, eye screening camps, educational book drives, and reforestation initiatives organized by the Lions Club of Balangoda (District 306).',
 };
 
-// Force dynamic or short revalidation so fresh data is loaded
-export const revalidate = 60;
-
 export default async function ProjectsPage() {
   let initialProjects: Project[] = [];
   let initialError: string | null = null;
