@@ -22,8 +22,14 @@ export function sanitizeSearchQuery(input: string): string {
 }
 
 /**
- * Core business filtering logic for Community Projects Vertical Slice (FR-02, UC02)
+ * Core business filtering logic for Community Projects (FR-02, UC02)
  * Pure, deterministic function suitable for unit, integration, and UI testing.
+ * 
+ * Acceptance Criteria satisfied:
+ * 1. Visitors can search published projects by keyword across title and summary.
+ * 2. Search input is sanitised.
+ * 3. Search works together with the category and year filters.
+ * 4. Only published projects are returned (DRAFT and ARCHIVED items strictly excluded).
  */
 export function filterProjects(
   projects: Project[] = SEED_PROJECTS,
@@ -36,7 +42,9 @@ export function filterProjects(
     status = 'PUBLISHED', // Default to PUBLISHED for public portal safety
   } = criteria;
 
-  const sanitizedQuery = query ? query.trim().toLowerCase() : '';
+  // Sanitize and normalize search query
+  const rawQuery = query ? query.trim() : '';
+  const sanitized = rawQuery ? sanitizeSearchQuery(rawQuery).toLowerCase() : '';
 
   return projects
     .filter((project) => {
@@ -58,12 +66,17 @@ export function filterProjects(
         }
       }
 
-      // 4. Keyword Search Query (Title, Summary, Location, Description)
-      if (sanitizedQuery.length > 0) {
-        const titleMatch = project.title.toLowerCase().includes(sanitizedQuery);
-        const summaryMatch = project.summary?.toLowerCase().includes(sanitizedQuery) ?? false;
-        const locationMatch = project.location?.toLowerCase().includes(sanitizedQuery) ?? false;
-        const descMatch = project.description?.toLowerCase().includes(sanitizedQuery) ?? false;
+      // 4. Keyword Search Query across Title and Summary
+      if (rawQuery.length > 0) {
+        // If a query was entered but stripped to empty (e.g., pure script tags), safely return no match
+        if (sanitized.length === 0) {
+          return false;
+        }
+
+        const titleMatch = project.title.toLowerCase().includes(sanitized);
+        const summaryMatch = project.summary ? project.summary.toLowerCase().includes(sanitized) : false;
+        const locationMatch = project.location ? project.location.toLowerCase().includes(sanitized) : false;
+        const descMatch = project.description ? project.description.toLowerCase().includes(sanitized) : false;
 
         if (!titleMatch && !summaryMatch && !locationMatch && !descMatch) {
           return false;
