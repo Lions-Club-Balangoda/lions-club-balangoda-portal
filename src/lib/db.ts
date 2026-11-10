@@ -45,6 +45,29 @@ function initSchema(db: DatabaseSync) {
     CREATE INDEX IF NOT EXISTS idx_projects_category ON projects(category);
     CREATE INDEX IF NOT EXISTS idx_projects_event_date ON projects(event_date);
     CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
+
+    CREATE TABLE IF NOT EXISTS news_announcements (
+      news_id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      summary TEXT,
+      content TEXT NOT NULL,
+      cover_image_url TEXT,
+      cover_asset_id TEXT,
+      news_type TEXT NOT NULL DEFAULT 'NEWS',
+      is_pinned INTEGER NOT NULL DEFAULT 0,
+      expire_date TEXT,
+      status TEXT NOT NULL DEFAULT 'DRAFT',
+      published_at TEXT,
+      author_id TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_id) REFERENCES users(user_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_news_status ON news_announcements(status);
+    CREATE INDEX IF NOT EXISTS idx_news_slug ON news_announcements(slug);
+    CREATE INDEX IF NOT EXISTS idx_news_published_at ON news_announcements(published_at);
   `);
 }
 
