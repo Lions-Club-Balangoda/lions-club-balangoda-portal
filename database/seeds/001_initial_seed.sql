@@ -9,7 +9,7 @@ VALUES (
     'a0000000-0000-0000-0000-000000000001',
     'admin_balangoda',
     'admin@lionsclubbalangoda.org',
-    '$2b$12$zyuUFqLkNFIuVXWNsajKKemoOujmhWN0Sx9hyipOaswocgPSr0FFK', -- valid bcrypt work factor 12 hash of 'Admin@Lions2026!'
+    '$2a$12$eA.6wPZ3o5fB2yJ3J7P0m.mK6J9wZ2vK9aK3xXyZ8P2mK6J9wZ2vK', -- hashed placeholder
     'Lion Administrator',
     'ADMIN',
     TRUE
