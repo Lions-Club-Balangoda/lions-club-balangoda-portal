@@ -1,0 +1,27 @@
+# Prettier ignore file
+# Files and directories Prettier should not format.
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# SQL files (formatted by DB tools)
+database/**/*.sql
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated type declarations
+next-env.d.ts
+*.tsbuildinfo
+
+# Public SVGs
+public/
+
