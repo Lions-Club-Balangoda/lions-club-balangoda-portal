@@ -19,10 +19,12 @@ export interface Project {
   category: ServicePillar;
   summary: string;
   description: string;
-  coverImageUrl: string;
+  coverImageUrl: string | null;
   eventDate: string; // ISO Date YYYY-MM-DD
   location: string;
   status: ContentStatus;
+  publishedAt?: string | null;
+  authorId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -34,3 +36,9 @@ export interface ProjectFilterCriteria {
   status?: ContentStatus | 'ALL';
 }
 
+export interface ProjectsApiResponse {
+  success: boolean;
+  data?: Project[];
+  error?: string;
+  count?: number;
+}

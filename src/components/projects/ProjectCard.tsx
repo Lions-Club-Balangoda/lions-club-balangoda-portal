@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Project, ServicePillar } from '../../types/project';
 
@@ -5,85 +6,118 @@ interface ProjectCardProps {
   project: Project;
 }
 
-const PILLAR_STYLES: Record<ServicePillar, { label: string; badgeClass: string }> = {
+const PILLAR_STYLES: Record<ServicePillar, { badgeClass: string; label: string; icon: string }> = {
   HEALTHCARE: {
+    badgeClass: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
     label: 'Healthcare',
-    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300',
+    icon: '🩺',
   },
   EDUCATION: {
+    badgeClass: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
     label: 'Education',
-    badgeClass: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950 dark:text-amber-300',
+    icon: '📚',
   },
   ENVIRONMENT: {
+    badgeClass: 'bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300 border-teal-200 dark:border-teal-800',
     label: 'Environment',
-    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300',
+    icon: '🌱',
   },
   POVERTY_RELIEF: {
+    badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     label: 'Poverty Relief',
-    badgeClass: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950 dark:text-purple-300',
+    icon: '🤝',
   },
   OTHER: {
+    badgeClass: 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700',
     label: 'Community Service',
-    badgeClass: 'bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300',
+    icon: '🦁',
   },
 };
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const pillar = PILLAR_STYLES[project.category] || PILLAR_STYLES.OTHER;
-  const formattedDate = new Date(project.eventDate).toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+
+  // Format event date nicely
+  const formattedDate = (() => {
+    try {
+      const d = new Date(project.eventDate);
+      return d.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    } catch {
+      return project.eventDate;
+    }
+  })();
 
   return (
     <article
       data-testid={`project-card-${project.id}`}
-      className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+      className="group flex flex-col w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
     >
-      <div className="relative h-48 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={project.coverImageUrl}
-          alt={project.title}
-          className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy"
-        />
-        <div className="absolute top-3 right-3">
+      {/* Cover Image Container */}
+      <div className="relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+        {project.coverImageUrl ? (
+          <img
+            src={project.coverImageUrl}
+            alt={project.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-indigo-950 p-4 text-center text-white">
+            <span className="text-4xl mb-1">{pillar.icon}</span>
+            <span className="text-xs font-semibold tracking-wider uppercase text-amber-300">
+              Lions Club Balangoda
+            </span>
+          </div>
+        )}
+
+        {/* Category Badge overlay */}
+        <div className="absolute top-3 left-3">
           <span
-            data-testid="project-category-badge"
-            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${pillar.badgeClass}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold backdrop-blur-md ${pillar.badgeClass}`}
           >
-            {pillar.label}
+            <span>{pillar.icon}</span>
+            <span>{pillar.label}</span>
           </span>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="mb-2 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-          <span>📅 {formattedDate}</span>
-          <span>•</span>
-          <span>📍 {project.location}</span>
+      {/* Card Content Body */}
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {/* Date and Location row */}
+        <div className="mb-2.5 flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="inline-flex items-center gap-1 font-medium text-zinc-700 dark:text-zinc-300">
+            <span aria-hidden="true">📅</span>
+            <time dateTime={project.eventDate}>{formattedDate}</time>
+          </span>
+          <span className="hidden sm:inline text-zinc-300 dark:text-zinc-700">•</span>
+          <span className="inline-flex items-center gap-1 truncate max-w-[200px]">
+            <span aria-hidden="true">📍</span>
+            <span className="truncate">{project.location}</span>
+          </span>
         </div>
 
-        <h3 className="mb-2 text-lg font-bold text-zinc-900 dark:text-zinc-100 line-clamp-2">
+        {/* Project Title */}
+        <h2 className="mb-2 text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 sm:text-lg">
           {project.title}
-        </h3>
+        </h2>
 
-        <p className="mb-4 flex-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-3">
+        {/* Project Summary */}
+        <p className="mb-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 line-clamp-3 leading-relaxed flex-1">
           {project.summary}
         </p>
 
-        <div className="mt-auto pt-3 border-t border-zinc-100 dark:border-zinc-800">
-          <a
-            href={`/projects/${project.slug}`}
-            className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-          >
-            Read Story & View Gallery →
-          </a>
+        {/* Card Footer Action */}
+        <div className="mt-auto pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            View Project Brief
+            <span aria-hidden="true">→</span>
+          </span>
         </div>
       </div>
     </article>
   );
 };
-
