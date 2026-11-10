@@ -1,0 +1,53 @@
+name: Require Peer Review Approval
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+jobs:
+  verify-peer-review:
+    name: Verify Independent Peer Approval
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'main'
+    steps:
+      - name: Check for Approving Review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const prNumber = pr.number;
+            const author = pr.user.login;
+
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            // Keep track of the latest review state per user
+            const latestReviewByUser = new Map();
+            for (const review of reviews) {
+              latestReviewByUser.set(review.user.login, review.state);
+            }
+
+            const approvals = [];
+            for (const [reviewer, state] of latestReviewByUser.entries()) {
+              if (reviewer !== author && state === 'APPROVED') {
+                approvals.push(reviewer);
+              }
+            }
+
+            console.log(`PR #${prNumber} authored by: @${author}`);
+            console.log(`Approvals found (${approvals.length}):`, approvals);
+
+            if (approvals.length < 1) {
+              core.setFailed(
+                `❌ MERGE BLOCKED: This pull request requires at least one approving peer review from another team member before merging into main. Authors cannot approve their own PRs.`
+              );
+            } else {
+              console.log(`✅ Approved for merge by: ${approvals.map(u => '@' + u).join(', ')}`);
+            }

@@ -1,0 +1,27 @@
+# ==============================================================================
+# CODEOWNERS for Lions Club of Balangoda Web Portal & CMS
+# IS5109 - Group 14 (Faculty of Computing, Sabaragamuwa University of Sri Lanka)
+# ==============================================================================
+#
+# Rules:
+# - All team members are code owners across the repository.
+# - Any pull request targeting main or Dev will automatically request reviews.
+# - At least one approving peer review is required prior to merging.
+
+# Global owners for all files
+* @ahmdmaj @a-zahi2002 @Yoosuf01 @Ifthiya-Zeenath @mohamednafrisnrs-source @jinosmja
+
+# Database & Migrations
+/database/ @a-zahi2002 @mohamednafrisnrs-source @Yoosuf01
+
+# Backend & Server APIs
+/server/ @mohamednafrisnrs-source @ahmdmaj @a-zahi2002
+
+# Frontend UI & App Router
+/src/ @jinosmja @Ifthiya-Zeenath @Yoosuf01
+
+# CI/CD & GitHub Configurations
+/.github/ @mohamednafrisnrs-source @a-zahi2002 @ahmdmaj
+
+# Documentation & Specifications
+/Docs/ @Yoosuf01 @a-zahi2002 @Ifthiya-Zeenath
