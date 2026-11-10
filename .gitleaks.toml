@@ -8,3 +8,4 @@ description = "Ignore synthetic/mock credentials in automated test files"
 paths = [
   '''tests/.*'''
 ]
+
