@@ -1,3 +1,8 @@
+# ==============================================================================
+# PR Review Enforcement Workflow
+# Ensures at least one independent peer approval is submitted before merge
+# ==============================================================================
+
 name: Require Peer Review Approval
 
 on:
@@ -7,16 +12,19 @@ on:
   pull_request_review:
     types: [submitted, dismissed]
 
+permissions:
+  pull-requests: read
+  contents: read
+
 jobs:
   verify-peer-review:
     name: Verify Independent Peer Approval
     runs-on: ubuntu-latest
-    if: github.base_ref == 'main'
+    if: github.event.pull_request.base.ref == 'main'
     steps:
       - name: Check for Approving Review
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             const prNumber = pr.number;
@@ -51,4 +59,3 @@ jobs:
             } else {
               console.log(`✅ Approved for merge by: ${approvals.map(u => '@' + u).join(', ')}`);
             }
-
