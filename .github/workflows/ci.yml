@@ -17,9 +17,11 @@ on:
   pull_request:
     branches:
       - main
+      - Dev
   push:
     branches:
       - main
+      - Dev
 
 # Cancel any in-progress run for the same PR/branch to save runner minutes.
 concurrency:
