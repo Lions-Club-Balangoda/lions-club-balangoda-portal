@@ -68,6 +68,41 @@ function initSchema(db: DatabaseSync) {
     CREATE INDEX IF NOT EXISTS idx_news_status ON news_announcements(status);
     CREATE INDEX IF NOT EXISTS idx_news_slug ON news_announcements(slug);
     CREATE INDEX IF NOT EXISTS idx_news_published_at ON news_announcements(published_at);
+
+    CREATE TABLE IF NOT EXISTS board_terms (
+      term_id TEXT PRIMARY KEY,
+      term_label TEXT NOT NULL,
+      start_date TEXT NOT NULL,
+      end_date TEXT NOT NULL,
+      is_current INTEGER NOT NULL DEFAULT 0,
+      theme TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_board_terms_current ON board_terms(is_current);
+    CREATE INDEX IF NOT EXISTS idx_board_terms_dates ON board_terms(start_date);
+
+    CREATE TABLE IF NOT EXISTS executive_members (
+      member_id TEXT PRIMARY KEY,
+      term_id TEXT NOT NULL,
+      full_name TEXT NOT NULL,
+      designation TEXT NOT NULL,
+      lion_title TEXT,
+      bio TEXT,
+      profile_image_url TEXT,
+      profile_asset_id TEXT,
+      contact_email TEXT,
+      contact_phone TEXT,
+      display_order INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'ACTIVE',
+      is_verified INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (term_id) REFERENCES board_terms(term_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_exec_members_term_order ON executive_members(term_id, display_order);
+    CREATE INDEX IF NOT EXISTS idx_exec_members_status ON executive_members(status);
   `);
 }
 
