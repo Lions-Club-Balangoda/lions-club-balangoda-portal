@@ -23,4 +23,3 @@ export const dbConfig = {
 // Placeholder — swap for real pool once stack is finalized:
 // import { Pool } from 'pg';
 // export const pool = new Pool(dbConfig);
-

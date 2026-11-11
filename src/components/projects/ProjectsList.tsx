@@ -99,7 +99,8 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
           Unable to Load Community Projects
         </h3>
         <p className="mt-2 text-sm text-red-700 dark:text-red-300 max-w-md mx-auto">
-          We are currently experiencing a technical issue retrieving service project records. Please check back shortly or refresh your browser.
+          We are currently experiencing a technical issue retrieving service project records. Please
+          check back shortly or refresh your browser.
         </p>
         <div className="mt-5">
           <button
@@ -128,7 +129,9 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
           No Community Projects Published Yet
         </h3>
         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
-          The Lions Club of Balangoda is currently compiling and preparing the service archives for this Lionistic year. Please visit again soon or contact our club secretary to learn about ongoing volunteer opportunities.
+          The Lions Club of Balangoda is currently compiling and preparing the service archives for
+          this Lionistic year. Please visit again soon or contact our club secretary to learn about
+          ongoing volunteer opportunities.
         </p>
       </div>
     );
@@ -175,7 +178,10 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
           {/* Year Filter Dropdown */}
           {availableYears.length > 0 && (
             <div className="flex items-center gap-2 self-start sm:self-auto">
-              <label htmlFor="year-select" className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              <label
+                htmlFor="year-select"
+                className="text-xs font-semibold text-zinc-500 uppercase tracking-wider"
+              >
                 Year:
               </label>
               <select
@@ -290,7 +296,8 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
               : 'No community projects matched your filter criteria'}
           </h3>
           <p className="mt-1.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-            Try checking for spelling mistakes, searching with broader keywords, or clearing your active filters to see all community service activities.
+            Try checking for spelling mistakes, searching with broader keywords, or clearing your
+            active filters to see all community service activities.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
             {isSearchActive && (

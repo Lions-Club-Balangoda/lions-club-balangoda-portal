@@ -8,11 +8,13 @@ import { NAV_ITEMS, isActiveRoute } from '../../data/navigation';
 export function Navbar() {
   const pathname = usePathname() || '/';
   const [isOpen, setIsOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
   // Close mobile drawer when route changes
-  useEffect(() => {
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setIsOpen(false);
-  }, [pathname]);
+  }
 
   // Handle keyboard navigation: close menu on Escape key press
   useEffect(() => {

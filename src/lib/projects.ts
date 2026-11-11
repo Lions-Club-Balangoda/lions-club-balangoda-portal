@@ -10,12 +10,18 @@ export function sanitizeSearchQuery(input: string): string {
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/[<>'"&]/g, (char) => {
       switch (char) {
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case "'": return '&#39;';
-        case '"': return '&quot;';
-        case '&': return '&amp;';
-        default: return char;
+        case '<':
+          return '&lt;';
+        case '>':
+          return '&gt;';
+        case "'":
+          return '&#39;';
+        case '"':
+          return '&quot;';
+        case '&':
+          return '&amp;';
+        default:
+          return char;
       }
     })
     .trim();
@@ -24,7 +30,7 @@ export function sanitizeSearchQuery(input: string): string {
 /**
  * Core business filtering logic for Community Projects (FR-02, UC02)
  * Pure, deterministic function suitable for unit, integration, and UI testing.
- * 
+ *
  * Acceptance Criteria satisfied:
  * 1. Visitors can search published projects by keyword across title and summary.
  * 2. Search input is sanitised.
@@ -74,9 +80,15 @@ export function filterProjects(
         }
 
         const titleMatch = project.title.toLowerCase().includes(sanitized);
-        const summaryMatch = project.summary ? project.summary.toLowerCase().includes(sanitized) : false;
-        const locationMatch = project.location ? project.location.toLowerCase().includes(sanitized) : false;
-        const descMatch = project.description ? project.description.toLowerCase().includes(sanitized) : false;
+        const summaryMatch = project.summary
+          ? project.summary.toLowerCase().includes(sanitized)
+          : false;
+        const locationMatch = project.location
+          ? project.location.toLowerCase().includes(sanitized)
+          : false;
+        const descMatch = project.description
+          ? project.description.toLowerCase().includes(sanitized)
+          : false;
 
         if (!titleMatch && !summaryMatch && !locationMatch && !descMatch) {
           return false;
