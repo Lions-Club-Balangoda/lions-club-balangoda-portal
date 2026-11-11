@@ -46,6 +46,33 @@ function initSchema(db: DatabaseSync) {
     CREATE INDEX IF NOT EXISTS idx_projects_event_date ON projects(event_date);
     CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
 
+    CREATE TABLE IF NOT EXISTS project_gallery (
+      image_id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      image_url TEXT NOT NULL,
+      caption TEXT,
+      display_order INTEGER NOT NULL DEFAULT 0,
+      is_cover INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_gallery_project_order ON project_gallery(project_id, display_order);
+
+    CREATE TABLE IF NOT EXISTS project_impact_metrics (
+      metric_id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      label TEXT NOT NULL,
+      metric_value TEXT NOT NULL,
+      prefix TEXT,
+      suffix TEXT,
+      display_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_project_metrics_order ON project_impact_metrics(project_id, display_order);
+
     CREATE TABLE IF NOT EXISTS news_announcements (
       news_id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
