@@ -182,3 +182,116 @@ export function formatProjectDate(isoDate: string): string {
     return isoDate;
   }
 }
+
+/**
+ * Sanitizes project description / rich text against XSS attacks (SEC-02, SEC-03, AC-4).
+ * Strips executable script tags, dangerous HTML elements, event handlers, and disarms dangerous URIs
+ * while preserving safe semantic formatting tags.
+ */
+export function sanitizeProjectDescription(rawContent: string): string {
+  if (!rawContent) return '';
+
+  let sanitized = rawContent;
+
+  // 1. Remove script tags and their content
+  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+  // 2. Remove iframe, object, embed, form, input, button tags
+  sanitized = sanitized.replace(/<\/?(iframe|object|embed|applet|form|input|button)\b[^>]*>/gi, '');
+
+  // 3. Remove inline event handlers (e.g., onclick, onerror, onload, onmouseover)
+  sanitized = sanitized.replace(/\s*on\w+\s*=\s*(['"]).*?\1/gi, '');
+  sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^>\s]+/gi, '');
+
+  // 4. Disarm javascript:, vbscript:, or data: in href/src attributes
+  sanitized = sanitized.replace(
+    /(href|src)\s*=\s*(['"])\s*(javascript|vbscript|data):.*?\2/gi,
+    '$1="#"'
+  );
+
+  return sanitized.trim();
+}
+
+/**
+ * Normalizes photographs from a project record into a uniform gallery array.
+ * Merges project.gallery items and project.photos strings without duplicates.
+ */
+export function normalizeProjectPhotos(
+  project: Project
+): import('../types/project.ts').ProjectGalleryImage[] {
+  const result: import('../types/project.ts').ProjectGalleryImage[] = [];
+  const seenUrls = new Set<string>();
+
+  // Process structured gallery items first
+  if (Array.isArray(project.gallery)) {
+    for (const item of project.gallery) {
+      if (item && item.imageUrl && !seenUrls.has(item.imageUrl)) {
+        seenUrls.add(item.imageUrl);
+        result.push({
+          id: item.id || `img-${result.length + 1}`,
+          imageUrl: item.imageUrl,
+          caption: item.caption || null,
+          displayOrder: typeof item.displayOrder === 'number' ? item.displayOrder : result.length,
+        });
+      }
+    }
+  }
+
+  // Process string photos array next
+  if (Array.isArray(project.photos)) {
+    for (const url of project.photos) {
+      if (typeof url === 'string' && url.trim().length > 0 && !seenUrls.has(url.trim())) {
+        const cleanUrl = url.trim();
+        seenUrls.add(cleanUrl);
+        result.push({
+          id: `photo-${result.length + 1}`,
+          imageUrl: cleanUrl,
+          caption: null,
+          displayOrder: result.length,
+        });
+      }
+    }
+  }
+
+  return result.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+}
+
+/**
+ * Checks whether a project has valid impact metrics to display.
+ */
+export function hasImpactMetrics(project: Project): boolean {
+  return (
+    Array.isArray(project.impactMetrics) &&
+    project.impactMetrics.length > 0 &&
+    project.impactMetrics.some((m) =>
+      Boolean(m && (m.label || m.value !== undefined || m.value !== null))
+    )
+  );
+}
+
+/**
+ * Retrieves a published project by slug from in-memory/seed data.
+ * Strictly returns null for unpublished (DRAFT, ARCHIVED) or unknown slugs (AC-3).
+ * Sanitizes project description (AC-4).
+ */
+export function getPublishedProjectBySlugFromData(
+  slug: string,
+  projects: Project[] = SEED_PROJECTS
+): Project | null {
+  if (!slug) return null;
+  const normalizedSlug = slug.toLowerCase().trim();
+
+  const found = projects.find((p) => p.slug && p.slug.toLowerCase().trim() === normalizedSlug);
+
+  if (!found) return null;
+
+  // Strict AC-3: Reject unpublished projects (DRAFT or ARCHIVED)
+  if (found.status !== 'PUBLISHED') {
+    return null;
+  }
+
+  return {
+    ...found,
+    description: sanitizeProjectDescription(found.description),
+  };
+}
