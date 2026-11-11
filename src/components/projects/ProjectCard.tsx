@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
+import Link from 'next/link';
 import { Project, ServicePillar } from '../../types/project';
 
 interface ProjectCardProps {
@@ -107,7 +108,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
         {/* Project Title */}
         <h2 className="mb-2 text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 sm:text-lg">
-          {project.title}
+          <Link href={`/projects/${project.slug}`} className="focus:outline-none focus:underline">
+            {project.title}
+          </Link>
         </h2>
 
         {/* Project Summary */}
@@ -117,10 +120,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
         {/* Card Footer Action */}
         <div className="mt-auto pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-          <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-            View Project Brief
+          <Link
+            href={`/projects/${project.slug}`}
+            className="text-xs font-semibold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform focus:outline-none focus:underline"
+          >
+            <span>View Project Brief</span>
             <span aria-hidden="true">→</span>
-          </span>
+          </Link>
         </div>
       </div>
     </article>
