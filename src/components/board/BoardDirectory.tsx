@@ -5,60 +5,73 @@ import type { BoardTerm, ExecutiveMember } from '../../types/board.ts';
 import { YearSelector } from './YearSelector.tsx';
 import { MemberCard } from './MemberCard.tsx';
 
-interface BoardDirectoryProps {
+export interface BoardDirectoryProps {
   terms: BoardTerm[];
-  initialSelectedTerm: BoardTerm | null;
-  initialMembers: ExecutiveMember[];
+  initialSelectedTerm?: BoardTerm | null;
+  initialMembers?: ExecutiveMember[];
+  members?: ExecutiveMember[];
   allMembers?: ExecutiveMember[];
   isInitialInvalidYear?: boolean;
   invalidYearRequested?: string | null;
 }
 
-export const BoardDirectory: React.FC<BoardDirectoryProps> = ({
+export function BoardDirectory({
   terms,
   initialSelectedTerm,
   initialMembers,
-  allMembers = [],
+  members,
+  allMembers,
   isInitialInvalidYear = false,
   invalidYearRequested = null,
-}) => {
+}: BoardDirectoryProps) {
+  // Support both prop conventions
+  const effectiveInitialMembers = useMemo(
+    () => initialMembers || members || [],
+    [initialMembers, members]
+  );
+  const effectiveAllMembers = useMemo(
+    () => allMembers || members || effectiveInitialMembers,
+    [allMembers, members, effectiveInitialMembers]
+  );
+
+  const currentTermDefault = useMemo(() => {
+    return initialSelectedTerm || terms.find((t) => t.isCurrent) || terms[0] || null;
+  }, [terms, initialSelectedTerm]);
+
   const [selectedYear, setSelectedYear] = useState<string>(
-    initialSelectedTerm?.termId || (terms[0]?.termId ?? '')
+    currentTermDefault?.termId || (terms[0]?.termId ?? '')
   );
   const [showInvalidAlert, setShowInvalidAlert] = useState<boolean>(isInitialInvalidYear);
   const [isPending, startTransition] = useTransition();
 
   // Find currently active term object
   const activeTerm = useMemo(() => {
-    return terms.find((t) => t.termId === selectedYear) || initialSelectedTerm || terms[0] || null;
-  }, [terms, selectedYear, initialSelectedTerm]);
+    return terms.find((t) => t.termId === selectedYear) || currentTermDefault;
+  }, [terms, selectedYear, currentTermDefault]);
 
-  // Compute members to display
-  const activeMembers = useMemo(() => {
-    // If allMembers is available, filter locally for instantaneous responsiveness
-    if (allMembers.length > 0 && selectedYear) {
-      return allMembers
+  // Compute active members to display
+  const displayedMembers = useMemo(() => {
+    if (effectiveAllMembers.length > 0 && selectedYear) {
+      return effectiveAllMembers
         .filter((m) => m.termId === selectedYear && m.status === 'ACTIVE')
         .sort((a, b) => a.displayOrder - b.displayOrder);
     }
-    // Otherwise fallback to initialMembers if it matches selectedYear
-    if (initialSelectedTerm?.termId === selectedYear) {
-      return initialMembers;
+    if (activeTerm?.termId === selectedYear) {
+      return effectiveInitialMembers;
     }
-    return initialMembers;
-  }, [allMembers, selectedYear, initialMembers, initialSelectedTerm]);
+    return effectiveInitialMembers;
+  }, [effectiveAllMembers, selectedYear, activeTerm, effectiveInitialMembers]);
 
   const handleSelectYear = (year: string) => {
     startTransition(() => {
       setSelectedYear(year);
       setShowInvalidAlert(false);
 
-      // Synchronize URL search parameter (?year=...) for deep-linking and bookmarking
+      // Deep-linking URL synchronization
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
         const currentTerm = terms.find((t) => t.isCurrent);
         if (currentTerm && currentTerm.termId === year) {
-          // Clean URL for current year default
           url.searchParams.delete('year');
         } else {
           url.searchParams.set('year', year);
@@ -148,14 +161,14 @@ export const BoardDirectory: React.FC<BoardDirectoryProps> = ({
       </div>
 
       {/* Executive Members Grid */}
-      {activeMembers && activeMembers.length > 0 ? (
+      {displayedMembers && displayedMembers.length > 0 ? (
         <section
           aria-label={`Executive Committee Members for ${activeTerm?.termLabel || selectedYear}`}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           data-testid="members-grid"
         >
-          {activeMembers.map((member) => (
-            <MemberCard key={member.memberId} member={member} />
+          {displayedMembers.map((member) => (
+            <MemberCard key={member.id || member.memberId} member={member} />
           ))}
         </section>
       ) : (
@@ -176,5 +189,4 @@ export const BoardDirectory: React.FC<BoardDirectoryProps> = ({
       )}
     </div>
   );
-};
-
+}

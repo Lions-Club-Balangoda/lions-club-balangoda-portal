@@ -24,12 +24,10 @@ async function BoardDirectoryContent({ searchParams }: BoardPageProps) {
   let directoryData: BoardDirectoryViewModel;
 
   try {
-    // Database-backed retrieval with parameterised query
     directoryData = getBoardDirectoryData(requestedYear);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown server error';
     console.error('[BoardPage] Failed to fetch board directory:', message);
-    // Graceful fallback to pure domain resolver with seed data
     directoryData = resolveBoardDirectoryState(
       SEED_BOARD_TERMS,
       SEED_EXECUTIVE_MEMBERS,
@@ -37,7 +35,6 @@ async function BoardDirectoryContent({ searchParams }: BoardPageProps) {
     );
   }
 
-  // Active members for instant client-side tab switching
   const allMembers = SEED_EXECUTIVE_MEMBERS.filter((m) => m.status === 'ACTIVE');
 
   return (
@@ -84,7 +81,7 @@ export default function BoardPage({ searchParams }: BoardPageProps) {
           </p>
         </header>
 
-        {/* Main Board Directory Container wrapped in Suspense for dynamic searchParams streaming */}
+        {/* Main Board Directory Container */}
         <main className="w-full max-w-full min-w-0">
           <Suspense fallback={<BoardLoadingSkeleton />}>
             <BoardDirectoryContent searchParams={searchParams} />
