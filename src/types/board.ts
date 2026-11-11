@@ -37,3 +37,4 @@ export interface BoardDirectoryViewModel {
   isInvalidYear: boolean;
   invalidYearRequested?: string | null;
 }
+
