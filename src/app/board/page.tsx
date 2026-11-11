@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { BoardDirectory } from '../../components/board/BoardDirectory.tsx';
 import { getBoardDirectoryData } from '../../lib/board-repository.ts';
@@ -16,7 +16,7 @@ interface BoardPageProps {
   searchParams?: Promise<{ year?: string | string[] }>;
 }
 
-export default async function BoardPage({ searchParams }: BoardPageProps) {
+async function BoardDirectoryContent({ searchParams }: BoardPageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const rawYear = resolvedSearchParams.year;
   const requestedYear = Array.isArray(rawYear) ? rawYear[0] : rawYear;
@@ -37,9 +37,35 @@ export default async function BoardPage({ searchParams }: BoardPageProps) {
     );
   }
 
-  // Also pass all active members for instant client-side tab switching without reloading
+  // Active members for instant client-side tab switching
   const allMembers = SEED_EXECUTIVE_MEMBERS.filter((m) => m.status === 'ACTIVE');
 
+  return (
+    <BoardDirectory
+      terms={directoryData.terms}
+      initialSelectedTerm={directoryData.selectedTerm}
+      initialMembers={directoryData.members}
+      allMembers={allMembers}
+      isInitialInvalidYear={directoryData.isInvalidYear}
+      invalidYearRequested={directoryData.invalidYearRequested}
+    />
+  );
+}
+
+function BoardLoadingSkeleton() {
+  return (
+    <div className="w-full max-w-full animate-pulse space-y-8" data-testid="board-skeleton">
+      <div className="h-24 rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-72 rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function BoardPage({ searchParams }: BoardPageProps) {
   return (
     <div className="min-h-screen bg-zinc-50/70 py-10 px-4 sm:px-6 lg:px-8 font-sans dark:bg-black w-full max-w-full overflow-x-hidden">
       <div className="mx-auto max-w-7xl w-full">
@@ -58,16 +84,11 @@ export default async function BoardPage({ searchParams }: BoardPageProps) {
           </p>
         </header>
 
-        {/* Main Board Directory Container */}
+        {/* Main Board Directory Container wrapped in Suspense for dynamic searchParams streaming */}
         <main className="w-full max-w-full min-w-0">
-          <BoardDirectory
-            terms={directoryData.terms}
-            initialSelectedTerm={directoryData.selectedTerm}
-            initialMembers={directoryData.members}
-            allMembers={allMembers}
-            isInitialInvalidYear={directoryData.isInvalidYear}
-            invalidYearRequested={directoryData.invalidYearRequested}
-          />
+          <Suspense fallback={<BoardLoadingSkeleton />}>
+            <BoardDirectoryContent searchParams={searchParams} />
+          </Suspense>
         </main>
       </div>
     </div>
