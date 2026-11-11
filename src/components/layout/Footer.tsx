@@ -1,15 +1,9 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { NAV_ITEMS, CLUB_CONTACT_INFO } from '../../data/navigation';
 
 export function Footer() {
-  const [currentYear, setCurrentYear] = useState<number>(2026);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = 2026;
 
   return (
     <footer
