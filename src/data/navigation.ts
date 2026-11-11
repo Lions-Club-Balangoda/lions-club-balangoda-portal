@@ -41,20 +41,13 @@ export const CLUB_CONTACT_INFO: ClubContactInfo = {
 export function isActiveRoute(currentPath: string, href: string): boolean {
   if (!currentPath || !href) return false;
   // Normalize trailing slash (unless it is root)
-  const normalizedPath = currentPath.length > 1 && currentPath.endsWith('/') 
-    ? currentPath.slice(0, -1) 
-    : currentPath;
-  const normalizedHref = href.length > 1 && href.endsWith('/') 
-    ? href.slice(0, -1) 
-    : href;
+  const normalizedPath =
+    currentPath.length > 1 && currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
+  const normalizedHref = href.length > 1 && href.endsWith('/') ? href.slice(0, -1) : href;
 
   if (normalizedHref === '/') {
     return normalizedPath === '/';
   }
 
-  return (
-    normalizedPath === normalizedHref ||
-    normalizedPath.startsWith(`${normalizedHref}/`)
-  );
+  return normalizedPath === normalizedHref || normalizedPath.startsWith(`${normalizedHref}/`);
 }
-

@@ -38,4 +38,3 @@ export interface NewsApiResponse {
   error?: string;
   count?: number;
 }
-

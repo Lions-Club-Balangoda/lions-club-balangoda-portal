@@ -35,12 +35,18 @@ export function sanitizeNewsQuery(query: string): string {
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/[<>'"&]/g, (char) => {
       switch (char) {
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case "'": return '&#39;';
-        case '"': return '&quot;';
-        case '&': return '&amp;';
-        default: return char;
+        case '<':
+          return '&lt;';
+        case '>':
+          return '&gt;';
+        case "'":
+          return '&#39;';
+        case '"':
+          return '&quot;';
+        case '&':
+          return '&amp;';
+        default:
+          return char;
       }
     })
     .trim();
@@ -66,7 +72,7 @@ export function formatNewsDate(dateString: string): string {
 
 /**
  * Filters and sorts news items for public presentation.
- * 
+ *
  * Acceptance criteria satisfied:
  * - Public news page lists published items newest first with title, date and summary.
  * - Draft/unpublished items are NEVER exposed.
@@ -116,15 +122,12 @@ export function filterPublishedNews(
 
 /**
  * Retrieves a single published news item by its slug.
- * 
+ *
  * Acceptance criteria:
  * - Each item has a detail page; draft/unpublished items are never exposed.
  * Returns null if the item does not exist or is in DRAFT/ARCHIVED status.
  */
-export function getNewsBySlug(
-  slug: string,
-  items: NewsItem[] = SEED_NEWS
-): NewsItem | null {
+export function getNewsBySlug(slug: string, items: NewsItem[] = SEED_NEWS): NewsItem | null {
   if (!slug) return null;
   const normalizedSlug = slug.trim().toLowerCase();
 
@@ -141,4 +144,3 @@ export function getNewsBySlug(
     content: sanitizeNewsContent(found.content),
   };
 }
-

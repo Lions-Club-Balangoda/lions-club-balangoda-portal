@@ -94,4 +94,3 @@ export const VERIFIED_BOARD_MEMBERS: ExecutiveMember[] = [
     isVerified: true,
   },
 ];
-

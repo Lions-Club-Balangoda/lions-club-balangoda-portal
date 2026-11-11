@@ -1,11 +1,7 @@
 import test, { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-import {
-  NAV_ITEMS,
-  CLUB_CONTACT_INFO,
-  isActiveRoute,
-} from '../src/data/navigation.ts';
+import { NAV_ITEMS, CLUB_CONTACT_INFO, isActiveRoute } from '../src/data/navigation.ts';
 
 describe('Responsive Navigation & Brand Footer (LBW-32, NFR-02) Test Suite', () => {
   it('TC-NAV-001: Navigation includes all required public routes (Home, About, Projects, News, Board, Volunteer, Contact)', () => {
@@ -96,8 +92,14 @@ describe('Responsive Navigation & Brand Footer (LBW-32, NFR-02) Test Suite', () 
 
   it('TC-NAV-005: Navigation items have valid, accessible structure', () => {
     NAV_ITEMS.forEach((item) => {
-      assert.ok(typeof item.label === 'string' && item.label.trim().length > 0, 'Nav item must have non-empty label');
-      assert.ok(typeof item.href === 'string' && item.href.startsWith('/'), 'Nav item href must start with "/"');
+      assert.ok(
+        typeof item.label === 'string' && item.label.trim().length > 0,
+        'Nav item must have non-empty label'
+      );
+      assert.ok(
+        typeof item.href === 'string' && item.href.startsWith('/'),
+        'Nav item href must start with "/"'
+      );
     });
   });
 
@@ -116,11 +118,7 @@ describe('Responsive Navigation & Brand Footer (LBW-32, NFR-02) Test Suite', () 
       CLUB_CONTACT_INFO.district.includes('District 306'),
       'District must specify District 306'
     );
-    assert.strictEqual(
-      CLUB_CONTACT_INFO.motto,
-      'We Serve',
-      'Lions motto must be "We Serve"'
-    );
+    assert.strictEqual(CLUB_CONTACT_INFO.motto, 'We Serve', 'Lions motto must be "We Serve"');
     assert.ok(
       CLUB_CONTACT_INFO.city.includes('Balangoda'),
       'Address must specify Balangoda location'
@@ -128,11 +126,18 @@ describe('Responsive Navigation & Brand Footer (LBW-32, NFR-02) Test Suite', () 
   });
 
   it('TC-FOOTER-002: Footer links cover all core community public areas', () => {
-    const requiredFooterKeys = ['/', '/about', '/projects', '/news', '/board', '/volunteer', '/contact'];
+    const requiredFooterKeys = [
+      '/',
+      '/about',
+      '/projects',
+      '/news',
+      '/board',
+      '/volunteer',
+      '/contact',
+    ];
     requiredFooterKeys.forEach((href) => {
       const match = NAV_ITEMS.some((item) => item.href === href);
       assert.ok(match, `Footer must include public link to ${href}`);
     });
   });
 });
-

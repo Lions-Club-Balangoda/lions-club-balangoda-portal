@@ -124,4 +124,3 @@ export function NewsCard({ news }: NewsCardProps) {
     </article>
   );
 }
-

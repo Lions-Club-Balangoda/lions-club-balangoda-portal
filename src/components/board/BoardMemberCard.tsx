@@ -1,11 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import type { ExecutiveMember } from '../../types/board';
-import {
-  formatMemberDisplayName,
-  getMemberInitials,
-  sanitizeMemberText,
-} from '../../lib/board';
+import { formatMemberDisplayName, getMemberInitials, sanitizeMemberText } from '../../lib/board';
 
 interface BoardMemberCardProps {
   member: ExecutiveMember;

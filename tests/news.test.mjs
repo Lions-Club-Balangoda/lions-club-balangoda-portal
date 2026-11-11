@@ -54,11 +54,19 @@ describe('News and Announcements Public Archive (LBW-37, EPIC-04) Test Suite', (
     const publicNews = filterPublishedNews(SEED_NEWS);
 
     const containsDraft = publicNews.some((item) => item.status === 'DRAFT');
-    assert.strictEqual(containsDraft, false, 'DRAFT items must be strictly excluded from public news list');
+    assert.strictEqual(
+      containsDraft,
+      false,
+      'DRAFT items must be strictly excluded from public news list'
+    );
 
     // Searching specifically for draft title must return 0 results
     const searchDraft = filterPublishedNews(SEED_NEWS, { query: 'Internal Cabinet Meeting' });
-    assert.strictEqual(searchDraft.length, 0, 'Searching for draft keywords must yield zero public results');
+    assert.strictEqual(
+      searchDraft.length,
+      0,
+      'Searching for draft keywords must yield zero public results'
+    );
 
     // Slug lookup for draft item must return null
     const draftBySlug = getNewsBySlug('internal-cabinet-meeting-discussion-notes', SEED_NEWS);
@@ -69,7 +77,10 @@ describe('News and Announcements Public Archive (LBW-37, EPIC-04) Test Suite', (
     const item = getNewsBySlug('official-launch-balangoda-web-portal', SEED_NEWS);
     assert.ok(item, 'Should retrieve published news item by slug');
     assert.strictEqual(item.slug, 'official-launch-balangoda-web-portal');
-    assert.strictEqual(item.title, 'Official Launch of the Lions Club of Balangoda Community Web Portal');
+    assert.strictEqual(
+      item.title,
+      'Official Launch of the Lions Club of Balangoda Community Web Portal'
+    );
     assert.strictEqual(item.status, 'PUBLISHED');
     assert.ok(item.content.length > 0, 'Article content must be present');
 
@@ -117,7 +128,10 @@ describe('News and Announcements Public Archive (LBW-37, EPIC-04) Test Suite', (
     assert.ok(!sanitized.includes('onerror='), 'Inline event handlers must be stripped');
     assert.ok(!sanitized.includes('javascript:'), 'javascript: URLs must be disarmed');
     assert.ok(!sanitized.includes('<iframe'), 'Iframe tags must be stripped');
-    assert.ok(sanitized.includes('<p>Legitimate club news report.</p>'), 'Safe HTML elements must be preserved');
+    assert.ok(
+      sanitized.includes('<p>Legitimate club news report.</p>'),
+      'Safe HTML elements must be preserved'
+    );
   });
 
   it('TC-NEWS-007: Empty results state is cleanly handled (AC-3)', () => {
@@ -151,4 +165,3 @@ describe('News and Announcements Public Archive (LBW-37, EPIC-04) Test Suite', (
     assert.strictEqual(notFound, null, 'Unknown slug must return null');
   });
 });
-

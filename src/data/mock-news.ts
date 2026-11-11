@@ -12,7 +12,8 @@ export const SEED_NEWS: NewsItem[] = [
       <p>Developed in collaboration with the Faculty of Computing at Sabaragamuwa University of Sri Lanka, this platform offers transparent public access to verified service project reports, executive board records, and direct volunteer intake workflows.</p>
       <p>We invite all community members, partners, and well-wishers to explore our humanitarian initiatives across Healthcare, Education, Environment, and Poverty Relief.</p>
     `,
-    coverImageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
     newsType: 'ANNOUNCEMENT',
     isPinned: true,
     status: 'PUBLISHED',
@@ -33,7 +34,8 @@ export const SEED_NEWS: NewsItem[] = [
       <p>Free eye check-ups, diagnostic screenings, custom reading glasses distribution, and zero-cost cataract surgeries with high-grade intraocular lenses will be provided to eligible patients from rural areas.</p>
       <p>For pre-registration and transportation coordination, please contact the club secretariat or visit the Base Hospital registration desk.</p>
     `,
-    coverImageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
     newsType: 'NEWS',
     isPinned: false,
     status: 'PUBLISHED',
@@ -54,7 +56,8 @@ export const SEED_NEWS: NewsItem[] = [
       <p>The citation highlights the collaborative watershed restoration campaign in Kaltota, which mobilized over 100 student volunteers and forest conservation officers.</p>
       <p>We extend our deepest gratitude to our partner schools, community elders, and dedicated club members who made this impact possible.</p>
     `,
-    coverImageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80',
     newsType: 'PRESS_RELEASE',
     isPinned: false,
     status: 'PUBLISHED',
@@ -74,7 +77,8 @@ export const SEED_NEWS: NewsItem[] = [
       <p>Members of the Lions Club of Balangoda successfully concluded our annual educational supply drive across three rural primary schools in Medadumbara.</p>
       <p>Each recipient student was provided with school bags, exercise books, geometry kits, and essential stationery to support their uninterrupted schooling.</p>
     `,
-    coverImageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80',
     newsType: 'NEWS',
     isPinned: false,
     status: 'PUBLISHED',
@@ -101,4 +105,3 @@ export const SEED_NEWS: NewsItem[] = [
     updatedAt: '2026-11-01T00:00:00Z',
   },
 ];
-

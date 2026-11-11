@@ -53,11 +53,7 @@ export function NewsList({ initialNews, error }: NewsListProps) {
       {/* Controls: Search and Type Filter */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* News Type Tabs */}
-        <div
-          role="tablist"
-          aria-label="Filter by update type"
-          className="flex flex-wrap gap-2"
-        >
+        <div role="tablist" aria-label="Filter by update type" className="flex flex-wrap gap-2">
           {FILTER_TABS.map((tab) => {
             const isActive = selectedType === tab.value;
             return (
@@ -164,4 +160,3 @@ export function NewsList({ initialNews, error }: NewsListProps) {
     </section>
   );
 }
-
