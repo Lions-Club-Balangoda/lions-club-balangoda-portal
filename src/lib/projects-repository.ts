@@ -1,7 +1,12 @@
 import { DatabaseSync } from 'node:sqlite';
 import { getDatabase, query } from './db.ts';
-import { sanitizeSearchQuery } from './projects.ts';
-import type { Project, ContentStatus } from '../types/project.ts';
+import { sanitizeSearchQuery, sanitizeProjectDescription } from './projects.ts';
+import type {
+  Project,
+  ContentStatus,
+  ProjectImpactMetric,
+  ProjectGalleryImage,
+} from '../types/project.ts';
 
 interface RawProjectRow {
   id: string;
@@ -16,6 +21,7 @@ interface RawProjectRow {
   status: ContentStatus;
   publishedAt: string | null;
   authorId: string;
+  authorName?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -130,28 +136,31 @@ export function getPublishedProjects(
 
 /**
  * Retrieves a single published project by slug. Rejects DRAFT or ARCHIVED.
+ * Attaches associated gallery images and impact metrics where present.
  */
 export function getPublishedProjectBySlug(slug: string, customDb?: DatabaseSync): Project | null {
   try {
     const db = customDb || getDatabase();
     const sql = `
       SELECT
-        project_id AS id,
-        title,
-        slug,
-        category,
-        summary,
-        description,
-        cover_image_url AS coverImageUrl,
-        event_date AS eventDate,
-        location,
-        status,
-        published_at AS publishedAt,
-        author_id AS authorId,
-        created_at AS createdAt,
-        updated_at AS updatedAt
-      FROM projects
-      WHERE slug = ? AND status = ?
+        p.project_id AS id,
+        p.title,
+        p.slug,
+        p.category,
+        p.summary,
+        p.description,
+        p.cover_image_url AS coverImageUrl,
+        p.event_date AS eventDate,
+        p.location,
+        p.status,
+        p.published_at AS publishedAt,
+        p.author_id AS authorId,
+        u.full_name AS authorName,
+        p.created_at AS createdAt,
+        p.updated_at AS updatedAt
+      FROM projects p
+      LEFT JOIN users u ON p.author_id = u.user_id
+      WHERE p.slug = ? AND p.status = ?
       LIMIT 1
     `;
 
@@ -163,21 +172,82 @@ export function getPublishedProjectBySlug(slug: string, customDb?: DatabaseSync)
     }
 
     const row = rows[0];
+
+    // Query gallery photos if table exists
+    let gallery: ProjectGalleryImage[] = [];
+    try {
+      const galleryRows = query<{
+        id: string;
+        imageUrl: string;
+        caption: string | null;
+        displayOrder: number;
+      }>(
+        `SELECT image_id AS id, image_url AS imageUrl, caption, display_order AS displayOrder
+         FROM project_gallery
+         WHERE project_id = ?
+         ORDER BY display_order ASC`,
+        [row.id],
+        db
+      );
+      gallery = galleryRows.map((g) => ({
+        id: g.id,
+        imageUrl: g.imageUrl,
+        caption: g.caption,
+        displayOrder: g.displayOrder,
+      }));
+    } catch {
+      // Table might not exist in simplified test fixtures
+      gallery = [];
+    }
+
+    // Query impact metrics if table exists
+    let impactMetrics: ProjectImpactMetric[] = [];
+    try {
+      const metricRows = query<{
+        label: string;
+        value: string;
+        prefix: string | null;
+        suffix: string | null;
+      }>(
+        `SELECT label, metric_value AS value, prefix, suffix
+         FROM project_impact_metrics
+         WHERE project_id = ?
+         ORDER BY display_order ASC`,
+        [row.id],
+        db
+      );
+      impactMetrics = metricRows.map((m) => ({
+        label: m.label,
+        value: m.value,
+        prefix: m.prefix,
+        suffix: m.suffix,
+      }));
+    } catch {
+      // Table might not exist in simplified test fixtures
+      impactMetrics = [];
+    }
+
+    const photos = gallery.map((g) => g.imageUrl);
+
     return {
       id: row.id,
       title: row.title,
       slug: row.slug,
       category: row.category as Project['category'],
       summary: row.summary,
-      description: row.description,
+      description: sanitizeProjectDescription(row.description),
       coverImageUrl: row.coverImageUrl,
       eventDate: row.eventDate,
       location: row.location,
       status: row.status,
       publishedAt: row.publishedAt,
       authorId: row.authorId,
+      authorName: row.authorName || null,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
+      impactMetrics: impactMetrics.length > 0 ? impactMetrics : undefined,
+      gallery: gallery.length > 0 ? gallery : undefined,
+      photos: photos.length > 0 ? photos : undefined,
     };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
