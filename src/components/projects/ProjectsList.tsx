@@ -1,46 +1,91 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Project, ServicePillar } from '../../types/project';
 import { ProjectCard } from './ProjectCard';
-import { sanitizeSearchQuery } from '../../lib/projects';
+import {
+  sanitizeSearchQuery,
+  getUniqueProjectCategories,
+  getUniqueProjectYears,
+  SERVICE_PILLAR_LABELS,
+  parseProjectFilterParams,
+} from '../../lib/projects';
 
 interface ProjectsListProps {
   initialProjects?: Project[];
   initialError?: string | null;
 }
 
-const CATEGORIES: { key: ServicePillar | 'ALL'; label: string }[] = [
-  { key: 'ALL', label: 'All Pillars' },
-  { key: 'HEALTHCARE', label: 'Healthcare' },
-  { key: 'EDUCATION', label: 'Education' },
-  { key: 'ENVIRONMENT', label: 'Environment' },
-  { key: 'POVERTY_RELIEF', label: 'Poverty Relief' },
-];
-
 export const ProjectsList: React.FC<ProjectsListProps> = ({
   initialProjects = [],
   initialError = null,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<ServicePillar | 'ALL'>('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedYear, setSelectedYear] = useState<string>('ALL');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // Extract unique sorted years from projects
-  const availableYears = useMemo(() => {
-    const years = new Set<string>();
-    initialProjects.forEach((p) => {
-      if (p.eventDate) {
-        const year = p.eventDate.substring(0, 4);
-        if (/^\d{4}$/.test(year)) {
-          years.add(year);
-        }
-      }
-    });
-    return Array.from(years).sort().reverse();
+  // Extract unique categories and years present in verified published projects (LBW-35 AC-3)
+  const availableCategories = useMemo(() => {
+    return getUniqueProjectCategories(initialProjects);
   }, [initialProjects]);
 
-  // Filter projects by category, search query across title and summary, and year
+  const availableYears = useMemo(() => {
+    return getUniqueProjectYears(initialProjects);
+  }, [initialProjects]);
+
+  // Read initial filter state from URL search params if present (LBW-35 AC-5)
+  const initialFiltersFromUrl = useMemo(() => {
+    return parseProjectFilterParams(searchParams);
+  }, [searchParams]);
+
+  const [selectedCategory, setSelectedCategory] = useState<ServicePillar | 'ALL'>(
+    initialFiltersFromUrl.category || 'ALL'
+  );
+  const [searchQuery, setSearchQuery] = useState(initialFiltersFromUrl.query || '');
+  const [selectedYear, setSelectedYear] = useState<string>(
+    initialFiltersFromUrl.year || 'ALL'
+  );
+
+  // Synchronize state if URL changes externally (e.g., browser back/forward or shared link)
+  useEffect(() => {
+    if (searchParams) {
+      const parsed = parseProjectFilterParams(searchParams);
+      setSelectedCategory(parsed.category || 'ALL');
+      setSelectedYear(parsed.year || 'ALL');
+      setSearchQuery(parsed.query || '');
+    }
+  }, [searchParams]);
+
+  // Helper to sync filter changes to the URL query string (LBW-35 AC-5)
+  const updateUrlFilters = useCallback(
+    (newCat: ServicePillar | 'ALL', newYr: string, newQuery: string) => {
+      const params = new URLSearchParams();
+      if (newCat && newCat !== 'ALL') {
+        params.set('category', newCat);
+      }
+      if (newYr && newYr !== 'ALL') {
+        params.set('year', newYr);
+      }
+      const trimmedQuery = newQuery.trim();
+      if (trimmedQuery.length > 0) {
+        params.set('q', trimmedQuery);
+      }
+
+      const qs = params.toString();
+      const targetUrl = qs ? `${pathname || '/projects'}?${qs}` : pathname || '/projects';
+
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(null, '', targetUrl);
+      }
+      if (router && typeof router.replace === 'function') {
+        router.replace(targetUrl, { scroll: false });
+      }
+    },
+    [pathname, router]
+  );
+
+  // Filter projects by category, search query across title, summary, location, and year (LBW-35 AC-1, AC-2)
   const filteredProjects = useMemo(() => {
     const sanitized = sanitizeSearchQuery(searchQuery).toLowerCase().trim();
 
@@ -60,7 +105,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
         return false;
       }
 
-      // 4. Keyword search across title and summary (and location)
+      // 4. Keyword search across title, summary, and location
       if (sanitized.length > 0) {
         const matchTitle = project.title.toLowerCase().includes(sanitized);
         const matchSummary = project.summary?.toLowerCase().includes(sanitized) ?? false;
@@ -75,14 +120,31 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
     });
   }, [initialProjects, selectedCategory, selectedYear, searchQuery]);
 
+  const handleCategoryClick = (cat: ServicePillar | 'ALL') => {
+    setSelectedCategory(cat);
+    updateUrlFilters(cat, selectedYear, searchQuery);
+  };
+
+  const handleYearChange = (yr: string) => {
+    setSelectedYear(yr);
+    updateUrlFilters(selectedCategory, yr, searchQuery);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    updateUrlFilters(selectedCategory, selectedYear, val);
+  };
+
   const handleClearSearchOnly = () => {
     setSearchQuery('');
+    updateUrlFilters(selectedCategory, selectedYear, '');
   };
 
   const handleResetAllFilters = () => {
     setSelectedCategory('ALL');
     setSearchQuery('');
     setSelectedYear('ALL');
+    updateUrlFilters('ALL', 'ALL', '');
   };
 
   // 1. API Failure / Error State
@@ -155,7 +217,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
               data-testid="project-search-input"
               aria-label="Search published projects by title or summary"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search by title or summary..."
               className="w-full box-border rounded-xl border border-zinc-300 bg-zinc-50/50 py-2.5 pl-9 pr-8 text-sm text-zinc-900 placeholder-zinc-500 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-400"
             />
@@ -172,7 +234,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
             )}
           </div>
 
-          {/* Year Filter Dropdown */}
+          {/* Year Filter Dropdown - derived from real published data (LBW-35 AC-3) */}
           {availableYears.length > 0 && (
             <div className="flex items-center gap-2 self-start sm:self-auto">
               <label htmlFor="year-select" className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
@@ -182,7 +244,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
                 id="year-select"
                 data-testid="project-year-filter"
                 value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
+                onChange={(e) => handleYearChange(e.target.value)}
                 className="rounded-xl border border-zinc-300 bg-zinc-50/50 py-2 px-3 text-sm text-zinc-900 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               >
                 <option value="ALL">All Years</option>
@@ -196,23 +258,39 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
           )}
         </div>
 
-        {/* Pillar Category Filter Tabs (horizontal scroll on mobile 360px without page overflow) */}
+        {/* Pillar Category Filter Tabs - derived from real published data (LBW-35 AC-3) (horizontal scroll on mobile 360px without page overflow) */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none">
-          {CATEGORIES.map((cat) => {
-            const isActive = selectedCategory === cat.key;
+          {/* Always provide All Pillars tab */}
+          <button
+            type="button"
+            data-testid="filter-btn-all"
+            onClick={() => handleCategoryClick('ALL')}
+            className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+              selectedCategory === 'ALL'
+                ? 'bg-blue-900 text-white shadow-sm dark:bg-blue-600'
+                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
+            }`}
+          >
+            All Pillars
+          </button>
+
+          {/* Dynamic category tabs from real published data only */}
+          {availableCategories.map((cat) => {
+            const isActive = selectedCategory === cat;
+            const label = SERVICE_PILLAR_LABELS[cat] || cat;
             return (
               <button
-                key={cat.key}
+                key={cat}
                 type="button"
-                data-testid={`filter-btn-${cat.key.toLowerCase()}`}
-                onClick={() => setSelectedCategory(cat.key)}
+                data-testid={`filter-btn-${cat.toLowerCase()}`}
+                onClick={() => handleCategoryClick(cat)}
                 className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                   isActive
                     ? 'bg-blue-900 text-white shadow-sm dark:bg-blue-600'
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
                 }`}
               >
-                {cat.label}
+                {label}
               </button>
             );
           })}
@@ -239,10 +317,10 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
             )}
             {selectedCategory !== 'ALL' && (
               <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 font-medium text-zinc-700 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700">
-                {CATEGORIES.find((c) => c.key === selectedCategory)?.label}
+                {SERVICE_PILLAR_LABELS[selectedCategory] || selectedCategory}
                 <button
                   type="button"
-                  onClick={() => setSelectedCategory('ALL')}
+                  onClick={() => handleCategoryClick('ALL')}
                   className="hover:text-zinc-900 dark:hover:text-zinc-100 ml-0.5"
                   aria-label="Remove category filter"
                 >
@@ -255,7 +333,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
                 Year: {selectedYear}
                 <button
                   type="button"
-                  onClick={() => setSelectedYear('ALL')}
+                  onClick={() => handleYearChange('ALL')}
                   className="hover:text-zinc-900 dark:hover:text-zinc-100 ml-0.5"
                   aria-label="Remove year filter"
                 >

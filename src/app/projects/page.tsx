@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { ProjectsList } from '../../components/projects/ProjectsList';
 import { getPublishedProjects } from '../../lib/projects-repository';
@@ -12,6 +12,19 @@ export const metadata: Metadata = {
 
 // Force dynamic or short revalidation so fresh data is loaded
 export const revalidate = 60;
+
+function ProjectsLoadingFallback() {
+  return (
+    <div className="w-full max-w-full animate-pulse space-y-6">
+      <div className="h-28 bg-zinc-200 dark:bg-zinc-800 rounded-2xl" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-2xl" />
+        <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-2xl" />
+        <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-2xl" />
+      </div>
+    </div>
+  );
+}
 
 export default async function ProjectsPage() {
   let initialProjects: Project[] = [];
@@ -42,12 +55,14 @@ export default async function ProjectsPage() {
           </p>
         </header>
 
-        {/* Main Projects List Container */}
+        {/* Main Projects List Container with Suspense for useSearchParams */}
         <main className="w-full max-w-full min-w-0">
-          <ProjectsList
-            initialProjects={initialProjects}
-            initialError={initialError}
-          />
+          <Suspense fallback={<ProjectsLoadingFallback />}>
+            <ProjectsList
+              initialProjects={initialProjects}
+              initialError={initialError}
+            />
+          </Suspense>
         </main>
       </div>
     </div>
