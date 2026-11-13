@@ -115,8 +115,8 @@ export function sanitizeSlug(input: string): string {
   return input
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, '') // Remove invalid chars
-    .replace(/[\s_]+/g, '-') // Convert spaces/underscores to hyphens
+    .replace(/[\s_]+/g, '-') // Convert spaces/underscores to hyphens first
+    .replace(/[^a-z0-9-]/g, '') // Remove any remaining non-alphanumeric chars (except hyphens)
     .replace(/-+/g, '-') // Collapse multiple hyphens
     .replace(/^-+|-+$/g, ''); // Trim leading/trailing hyphens
 }
