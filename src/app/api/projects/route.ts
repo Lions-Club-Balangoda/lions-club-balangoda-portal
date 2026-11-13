@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { searchPublishedProjects } from '../../../lib/projects-repository';
+import { createSafeErrorResponse } from '../../../lib/security/safe-error';
 
 /**
  * Public API Route: GET /api/projects
@@ -42,19 +43,11 @@ export async function GET(request?: Request | NextRequest) {
       }
     );
   } catch (err: unknown) {
-    // Internal server log only
-    const errorMessage = err instanceof Error ? err.message : 'Unknown server error';
-    console.error('[API /api/projects] Failed to search projects:', errorMessage);
-
-    // Secure response: friendly user message, zero sensitive leak
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Unable to load community service projects at this time. Please try again later.',
-      },
-      {
-        status: 500,
-      }
-    );
+    return createSafeErrorResponse(err, {
+      statusCode: 500,
+      fallbackMessage:
+        'Unable to load community service projects at this time. Please try again later.',
+      trackingPrefix: 'API /api/projects',
+    });
   }
 }
