@@ -1,30 +1,24 @@
 import type { Project, ProjectFilterCriteria } from '../types/project.ts';
 import { SEED_PROJECTS } from '../data/mock-projects.ts';
+import {
+  sanitizeHtml,
+  sanitizeSearchQuery as baseSanitizeSearchQuery,
+} from './security/sanitization.ts';
+
+export {
+  sanitizeHtml,
+  sanitizeText,
+  sanitizeSlug,
+  sanitizeEmail,
+  sanitizePhoneNumber,
+  sanitizeObject,
+} from './security/sanitization.ts';
 
 /**
  * Sanitizes input query string against XSS injection
  */
 export function sanitizeSearchQuery(input: string): string {
-  if (!input) return '';
-  return input
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/[<>'"&]/g, (char) => {
-      switch (char) {
-        case '<':
-          return '&lt;';
-        case '>':
-          return '&gt;';
-        case "'":
-          return '&#39;';
-        case '"':
-          return '&quot;';
-        case '&':
-          return '&amp;';
-        default:
-          return char;
-      }
-    })
-    .trim();
+  return baseSanitizeSearchQuery(input);
 }
 
 /**
@@ -189,27 +183,7 @@ export function formatProjectDate(isoDate: string): string {
  * while preserving safe semantic formatting tags.
  */
 export function sanitizeProjectDescription(rawContent: string): string {
-  if (!rawContent) return '';
-
-  let sanitized = rawContent;
-
-  // 1. Remove script tags and their content
-  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-  // 2. Remove iframe, object, embed, form, input, button tags
-  sanitized = sanitized.replace(/<\/?(iframe|object|embed|applet|form|input|button)\b[^>]*>/gi, '');
-
-  // 3. Remove inline event handlers (e.g., onclick, onerror, onload, onmouseover)
-  sanitized = sanitized.replace(/\s*on\w+\s*=\s*(['"]).*?\1/gi, '');
-  sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^>\s]+/gi, '');
-
-  // 4. Disarm javascript:, vbscript:, or data: in href/src attributes
-  sanitized = sanitized.replace(
-    /(href|src)\s*=\s*(['"])\s*(javascript|vbscript|data):.*?\2/gi,
-    '$1="#"'
-  );
-
-  return sanitized.trim();
+  return sanitizeHtml(rawContent);
 }
 
 /**
