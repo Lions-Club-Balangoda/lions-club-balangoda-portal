@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { searchPublishedProjects } from '../../../lib/projects-repository';
-import { createSafeErrorResponse } from '../../../lib/security/safe-error';
+import { NextResponse, type NextRequest } from 'next/server.js';
+import { searchPublishedProjects } from '../../../lib/projects-repository.ts';
+import { createSafeErrorResponse } from '../../../lib/security/safe-error.ts';
 
 /**
  * Public API Route: GET /api/projects
