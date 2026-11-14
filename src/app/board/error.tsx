@@ -23,7 +23,8 @@ export default function BoardError({
           Unable to Load Board Directory
         </h2>
         <p className="text-sm text-red-700 dark:text-red-300">
-          An unexpected error occurred while retrieving the executive committee records. Please try again.
+          An unexpected error occurred while retrieving the executive committee records. Please try
+          again.
         </p>
         <button
           type="button"
@@ -36,4 +37,3 @@ export default function BoardError({
     </div>
   );
 }
-

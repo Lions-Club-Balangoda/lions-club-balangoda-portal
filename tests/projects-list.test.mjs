@@ -13,10 +13,10 @@ import { SEED_PROJECTS } from '../src/data/mock-projects.ts';
 describe('Projects List Vertical Slice (FR-02, UC02) Test Suite', () => {
   it('TC-PROJ-001: Initial load returns all published projects and excludes drafts', () => {
     const results = filterProjects(SEED_PROJECTS);
-    
+
     // Total seed items: 6 (5 published, 1 draft)
     assert.strictEqual(results.length, 5, 'Should return exactly 5 published projects');
-    
+
     // Verify no DRAFT items leaked
     const hasDrafts = results.some((p) => p.status === 'DRAFT');
     assert.strictEqual(hasDrafts, false, 'Draft projects must not appear in public results');
@@ -43,7 +43,11 @@ describe('Projects List Vertical Slice (FR-02, UC02) Test Suite', () => {
     );
 
     const educationProjects = filterProjects(SEED_PROJECTS, { category: 'EDUCATION' });
-    assert.strictEqual(educationProjects.length, 1, 'Should return 1 published education project (draft excluded)');
+    assert.strictEqual(
+      educationProjects.length,
+      1,
+      'Should return 1 published education project (draft excluded)'
+    );
     assert.strictEqual(educationProjects[0].category, 'EDUCATION');
 
     const envProjects = filterProjects(SEED_PROJECTS, { category: 'ENVIRONMENT' });
@@ -97,7 +101,11 @@ describe('Projects List Vertical Slice (FR-02, UC02) Test Suite', () => {
       category: 'EDUCATION',
       query: 'Diabetes',
     });
-    assert.strictEqual(combinedMismatch.length, 0, 'Should yield 0 results when query does not match category');
+    assert.strictEqual(
+      combinedMismatch.length,
+      0,
+      'Should yield 0 results when query does not match category'
+    );
   });
 
   it('TC-PROJ-006: Empty search results state handling', () => {

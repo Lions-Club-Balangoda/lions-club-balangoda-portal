@@ -12,9 +12,7 @@ interface NewsDetailPageProps {
   }>;
 }
 
-export async function generateMetadata({
-  params,
-}: NewsDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: NewsDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const news = getPublishedNewsBySlugFromDb(slug);
 
@@ -81,7 +79,10 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
           {news.authorName && (
             <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              Published by <span className="text-zinc-900 dark:text-zinc-200 font-semibold">{news.authorName}</span>
+              Published by{' '}
+              <span className="text-zinc-900 dark:text-zinc-200 font-semibold">
+                {news.authorName}
+              </span>
             </p>
           )}
 
@@ -129,4 +130,3 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     </article>
   );
 }
-

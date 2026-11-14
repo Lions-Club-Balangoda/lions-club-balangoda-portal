@@ -58,7 +58,10 @@ describe('Executive Board Directory (LBW-48, EPIC-07) Test Suite', () => {
     assert.ok(memberWithoutBioOrPhoto, 'Seed contains verified member without photo/bio');
 
     const initials = getMemberInitials(memberWithoutBioOrPhoto.fullName);
-    assert.ok(initials.length >= 1 && initials.length <= 2, 'Initials fallback must be 1-2 letters');
+    assert.ok(
+      initials.length >= 1 && initials.length <= 2,
+      'Initials fallback must be 1-2 letters'
+    );
     assert.strictEqual(initials, 'RS', 'Dr. R.M. Senarathne should yield RS initials');
 
     const cleanBio = sanitizeMemberText(memberWithoutBioOrPhoto.bio);
@@ -142,15 +145,26 @@ describe('Executive Board Directory (LBW-48, EPIC-07) Test Suite', () => {
   it('TC-BOARD-007: Database repository queries enforce verification, active status, and display_order', () => {
     const db = createTestDatabase();
 
-    db.prepare(`
+    db.prepare(
+      `
       INSERT INTO board_terms (term_id, term_label, start_date, end_date, is_current, theme)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run('2025-2026', 'Lionistic Year 2025/2026', '2025-07-01', '2026-06-30', 1, 'Lead With Care, Serve With Pride');
+    `
+    ).run(
+      '2025-2026',
+      'Lionistic Year 2025/2026',
+      '2025-07-01',
+      '2026-06-30',
+      1,
+      'Lead With Care, Serve With Pride'
+    );
 
-    db.prepare(`
+    db.prepare(
+      `
       INSERT INTO board_terms (term_id, term_label, start_date, end_date, is_current, theme)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run('2024-2025', 'Lionistic Year 2024/2025', '2024-07-01', '2025-06-30', 0, 'Make Your Mark');
+    `
+    ).run('2024-2025', 'Lionistic Year 2024/2025', '2024-07-01', '2025-06-30', 0, 'Make Your Mark');
 
     const insertMember = db.prepare(`
       INSERT INTO executive_members (
@@ -159,8 +173,26 @@ describe('Executive Board Directory (LBW-48, EPIC-07) Test Suite', () => {
     `);
 
     insertMember.run('m2', '2025-2026', 'H.M. Bandara', 'Club Secretary', 'Lion', 2, 'ACTIVE', 1);
-    insertMember.run('m1', '2025-2026', 'T. Sanjeewa Prasad Jayaweera', 'Club President', 'Lion Prof.', 1, 'ACTIVE', 1);
-    insertMember.run('m3', '2025-2026', 'Unverified Placeholder', 'Test Role', 'Lion', 3, 'ACTIVE', 0);
+    insertMember.run(
+      'm1',
+      '2025-2026',
+      'T. Sanjeewa Prasad Jayaweera',
+      'Club President',
+      'Lion Prof.',
+      1,
+      'ACTIVE',
+      1
+    );
+    insertMember.run(
+      'm3',
+      '2025-2026',
+      'Unverified Placeholder',
+      'Test Role',
+      'Lion',
+      3,
+      'ACTIVE',
+      0
+    );
     insertMember.run('m4', '2025-2026', 'Inactive Officer', 'Advisor', 'Lion', 4, 'INACTIVE', 1);
 
     const terms = getBoardTermsFromDb(db);
@@ -183,4 +215,3 @@ describe('Executive Board Directory (LBW-48, EPIC-07) Test Suite', () => {
     assert.strictEqual(clean, 'Experienced community leader.');
   });
 });
-

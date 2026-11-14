@@ -20,9 +20,7 @@ export default function NewsError({
         <span className="text-4xl" aria-hidden="true">
           ⚠️
         </span>
-        <h2 className="text-xl font-bold text-red-950 dark:text-red-200">
-          Failed to Load News
-        </h2>
+        <h2 className="text-xl font-bold text-red-950 dark:text-red-200">Failed to Load News</h2>
         <p className="text-sm text-red-700 dark:text-red-300">
           An unexpected error occurred while fetching news and announcements. Please try again.
         </p>
@@ -37,4 +35,3 @@ export default function NewsError({
     </div>
   );
 }
-

@@ -80,7 +80,7 @@ function initSchema(db: DatabaseSync) {
     );
 
     CREATE INDEX IF NOT EXISTS idx_board_terms_current ON board_terms(is_current);
-    CREATE INDEX IF NOT EXISTS idx_board_terms_dates ON board_terms(start_date);
+    CREATE INDEX IF NOT EXISTS idx_board_terms_dates ON board_terms(start_date DESC);
 
     CREATE TABLE IF NOT EXISTS executive_members (
       member_id TEXT PRIMARY KEY,
@@ -101,7 +101,7 @@ function initSchema(db: DatabaseSync) {
       FOREIGN KEY (term_id) REFERENCES board_terms(term_id)
     );
 
-    CREATE INDEX IF NOT EXISTS idx_exec_members_term_order ON executive_members(term_id, display_order);
+    CREATE INDEX IF NOT EXISTS idx_exec_members_term_order ON executive_members(term_id, display_order ASC);
     CREATE INDEX IF NOT EXISTS idx_exec_members_status ON executive_members(status);
   `);
 }
@@ -235,6 +235,170 @@ export function seedDevelopmentTestData(db: DatabaseSync) {
     '2021-08-15T10:00:00Z',
     'usr-dev-001'
   );
+
+  // Check if board_terms already exist
+  const countTerms = db.prepare('SELECT COUNT(*) as count FROM board_terms').get() as {
+    count: number;
+  };
+  if (!countTerms || countTerms.count === 0) {
+    const insertTerm = db.prepare(`
+      INSERT INTO board_terms (term_id, term_label, start_date, end_date, is_current, theme)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    insertTerm.run(
+      '2023-2024',
+      'Lionistic Year 2023/2024',
+      '2023-07-01',
+      '2024-06-30',
+      0,
+      'Changing the World through Service'
+    );
+    insertTerm.run(
+      '2024-2025',
+      'Lionistic Year 2024/2025',
+      '2024-07-01',
+      '2025-06-30',
+      0,
+      'Make Your Mark'
+    );
+    insertTerm.run(
+      '2025-2026',
+      'Lionistic Year 2025/2026',
+      '2025-07-01',
+      '2026-06-30',
+      1,
+      'Lead With Care, Serve With Pride'
+    );
+
+    const insertMember = db.prepare(`
+      INSERT INTO executive_members (
+        member_id, term_id, full_name, designation, lion_title, bio,
+        profile_image_url, contact_email, contact_phone, display_order, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    // 2025-2026 members
+    insertMember.run(
+      'mem-2025-001',
+      '2025-2026',
+      'T. Sanjeewa Prasad Jayaweera',
+      'Club President',
+      'Lion Prof.',
+      'Dean & Professor leading community service, educational upliftment, and sustainable healthcare initiatives across the Balangoda region.',
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+      'president@lionsclubbalangoda.org',
+      '+94 45 228 7200',
+      1,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2025-002',
+      '2025-2026',
+      'Sunil Rathnayake',
+      'Club Secretary',
+      'Lion',
+      'Overseeing club administrative affairs, project correspondence, and international reporting with District 306.',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+      'secretary@lionsclubbalangoda.org',
+      '+94 45 228 7201',
+      2,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2025-003',
+      '2025-2026',
+      'Chinthaka Fernando',
+      'Club Treasurer',
+      'Lion',
+      'Directing club financial governance, philanthropic project audit transparency, and treasury stewardship.',
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+      'treasurer@lionsclubbalangoda.org',
+      '+94 45 228 7202',
+      3,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2025-004',
+      '2025-2026',
+      'Dr. R.M. Senarathne',
+      '1st Vice President & Project Chair',
+      'Lion Dr.',
+      'Consultant physician spearheading rural vision testing clinics and disaster health relief camps.',
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
+      'projects@lionsclubbalangoda.org',
+      '+94 45 228 7203',
+      4,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2025-005',
+      '2025-2026',
+      'H.M. Bandara',
+      'Club Director & Membership Chair',
+      'Lion',
+      'Dedicated community leader coordinating volunteer engagement and sustainable youth service wings.',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
+      'membership@lionsclubbalangoda.org',
+      '+94 45 228 7204',
+      5,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2025-006-inactive',
+      '2025-2026',
+      'K.G. Somapala',
+      'Honorary Member (Inactive)',
+      'Lion',
+      'Past honorary member.',
+      null,
+      null,
+      null,
+      99,
+      'INACTIVE'
+    );
+
+    // 2024-2025 members
+    insertMember.run(
+      'mem-2024-001',
+      '2024-2025',
+      'H.M. Bandara',
+      'Immediate Past President',
+      'Lion',
+      'Led the landmark Sabaragamuwa environmental reforestation program and youth empowerment drive during 2024/2025.',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
+      'pastpresident@lionsclubbalangoda.org',
+      '+94 45 228 7204',
+      1,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2024-002',
+      '2024-2025',
+      'Samantha Perera',
+      'Club Secretary (2024-2025)',
+      'Lion',
+      'Managed club correspondence, documentation, and charter anniversary events in the 2024-2025 lionistic year.',
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+      'pastsecretary@lionsclubbalangoda.org',
+      null,
+      2,
+      'ACTIVE'
+    );
+    insertMember.run(
+      'mem-2024-003',
+      '2024-2025',
+      'Nihal Jayawardena',
+      'Club Treasurer (2024-2025)',
+      'Lion',
+      'Safeguarded club financial stewardship and oversaw disaster relief funds distribution across Balangoda.',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
+      'pasttreasurer@lionsclubbalangoda.org',
+      null,
+      3,
+      'ACTIVE'
+    );
+  }
 }
 
 /**

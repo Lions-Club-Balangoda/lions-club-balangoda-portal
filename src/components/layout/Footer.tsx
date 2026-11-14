@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { NAV_ITEMS, CLUB_CONTACT_INFO } from '../../data/navigation';
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2026;
 
   return (
     <footer
@@ -25,9 +25,7 @@ export function Footer() {
                 <h2 className="text-base font-bold text-white tracking-tight">
                   {CLUB_CONTACT_INFO.clubName}
                 </h2>
-                <p className="text-xs font-semibold text-amber-400">
-                  {CLUB_CONTACT_INFO.district}
-                </p>
+                <p className="text-xs font-semibold text-amber-400">{CLUB_CONTACT_INFO.district}</p>
               </div>
             </div>
             <p className="text-sm text-zinc-300 leading-relaxed">
@@ -160,4 +158,3 @@ export function Footer() {
     </footer>
   );
 }
-
