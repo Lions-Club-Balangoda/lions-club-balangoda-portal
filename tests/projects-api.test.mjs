@@ -11,10 +11,14 @@ describe('Community Projects API & Parameterised Database Layer (LBW-10)', () =>
     testDb = createTestDatabase();
 
     // Insert author
-    testDb.prepare(`
+    testDb
+      .prepare(
+        `
       INSERT INTO users (user_id, username, email, password_hash, full_name, role)
       VALUES ('usr-test-01', 'test_chair', 'chair@lionsbalangoda.test', 'hash', 'Lion Dr. Test', 'ADMIN')
-    `).run();
+    `
+      )
+      .run();
 
     const insertProject = testDb.prepare(`
       INSERT INTO projects (
@@ -118,10 +122,16 @@ describe('Community Projects API & Parameterised Database Layer (LBW-10)', () =>
 
     // Verify draft is completely excluded
     const hasDraft = projects.some((p) => p.status === 'DRAFT' || p.id === 'proj-draft-003');
-    assert.strictEqual(hasDraft, false, 'Unpublished DRAFT projects must never leak into public results');
+    assert.strictEqual(
+      hasDraft,
+      false,
+      'Unpublished DRAFT projects must never leak into public results'
+    );
 
     // Verify archived is completely excluded
-    const hasArchived = projects.some((p) => p.status === 'ARCHIVED' || p.id === 'proj-archived-004');
+    const hasArchived = projects.some(
+      (p) => p.status === 'ARCHIVED' || p.id === 'proj-archived-004'
+    );
     assert.strictEqual(hasArchived, false, 'ARCHIVED projects must never leak into public results');
 
     // Verify slug query also rejects drafts

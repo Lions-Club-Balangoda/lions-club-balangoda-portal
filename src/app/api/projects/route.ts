@@ -4,7 +4,7 @@ import { searchPublishedProjects } from '../../../lib/projects-repository';
 /**
  * Public API Route: GET /api/projects
  * Retrieves published community service projects with optional keyword search and category/year filters.
- * 
+ *
  * Security & Acceptance Constraints:
  * 1. Visitors can search published projects by keyword across title and summary via `?q=` or `?query=`.
  * 2. Search works together with category (`?category=`) and year (`?year=`) query parameters.
@@ -13,7 +13,7 @@ import { searchPublishedProjects } from '../../../lib/projects-repository';
  * 5. In the event of a database or server failure, returns a friendly error message
  *    with HTTP 500 without leaking stack traces or SQL schemas.
  */
-export async function GET(request?: Request | NextRequest) {
+export async function GET(request: Request | NextRequest) {
   try {
     let query = '';
     let category = 'ALL';

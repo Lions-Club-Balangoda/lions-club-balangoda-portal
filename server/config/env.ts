@@ -6,10 +6,7 @@
  * Usage: call validateEnv() as the very first thing in server/index.ts.
  */
 
-const REQUIRED_VARS = [
-  'DATABASE_URL',
-  'NEXTAUTH_SECRET',
-] as const;
+const REQUIRED_VARS = ['DATABASE_URL', 'NEXTAUTH_SECRET'] as const;
 
 export function validateEnv(): void {
   const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
@@ -22,4 +19,3 @@ export function validateEnv(): void {
     process.exit(1);
   }
 }
-

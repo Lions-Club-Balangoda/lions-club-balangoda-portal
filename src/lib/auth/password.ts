@@ -1,7 +1,7 @@
 /**
  * src/lib/auth/password.ts
  * Password Hashing, Verification, and Policy Enforcement
- * 
+ *
  * Security Standard: SEC-04
  * Requirement: Passwords must be salted and hashed with bcrypt (work factor >= 10)
  *              or Argon2. Plaintext is never stored or logged.
@@ -15,7 +15,7 @@ import bcrypt from 'bcryptjs';
  */
 export const MIN_BCRYPT_COST = 10;
 export const DEFAULT_BCRYPT_COST = 12; // Aligned with Docs/mvp-scope-specification.md
-export const MIN_PASSWORD_LENGTH = 8;  // Server-side minimum password length policy
+export const MIN_PASSWORD_LENGTH = 8; // Server-side minimum password length policy
 export const MAX_PASSWORD_LENGTH = 72; // Bcrypt maximum input length constraint (72 bytes)
 
 /**
@@ -29,7 +29,7 @@ export interface PasswordValidationResult {
 /**
  * Validates a password against server-side security policies.
  * Plaintext is processed in-memory only and never persisted or logged.
- * 
+ *
  * Policy rules:
  * 1. Must be a defined string.
  * 2. Cannot be empty or contain only whitespace.
@@ -80,12 +80,12 @@ export function assertPasswordPolicy(password: unknown): void {
 
 /**
  * Securely salts and hashes a plaintext password using bcrypt.
- * 
+ *
  * Constraints enforced:
  * - Work factor (cost) must be >= 10 (defaults to 12).
  * - Enforces server-side password policy prior to hashing.
  * - Plaintext is never stored, retained, or logged.
- * 
+ *
  * @param password Plaintext password to hash
  * @param cost Bcrypt cost factor / work rounds (default: 12)
  * @returns Standard Modular Crypt Format bcrypt hash string
@@ -115,24 +115,16 @@ export async function hashPassword(
 
 /**
  * Constant-time password verification against an existing bcrypt hash.
- * 
+ *
  * Protects against timing attacks and gracefully handles malformed inputs.
  * Plaintext password is never stored or logged.
- * 
+ *
  * @param password Plaintext password to verify
  * @param hash Stored bcrypt hash from database
  * @returns True if password matches hash, false otherwise
  */
-export async function verifyPassword(
-  password: string,
-  hash: string
-): Promise<boolean> {
-  if (
-    !password ||
-    !hash ||
-    typeof password !== 'string' ||
-    typeof hash !== 'string'
-  ) {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  if (!password || !hash || typeof password !== 'string' || typeof hash !== 'string') {
     return false;
   }
 
@@ -151,7 +143,7 @@ export async function verifyPassword(
 
 /**
  * Extracts the work factor (cost) from a standard bcrypt hash.
- * 
+ *
  * @param hash Stored bcrypt hash string
  * @returns The integer cost factor (e.g. 10, 12), or NaN if invalid
  */
@@ -224,4 +216,3 @@ export function sanitizeLogContext<T>(data: T): T {
 
   return sanitized as T;
 }
-

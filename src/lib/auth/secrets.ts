@@ -1,7 +1,7 @@
 /**
  * src/lib/auth/secrets.ts
  * Secrets Management and Environment Variable Access Guard
- * 
+ *
  * Security Standard: SEC-04
  * Requirement: No secrets (DB URL, JWT/session secret, email, media keys)
  *              in the repository history or client bundle; verified by secret scan.
@@ -20,11 +20,7 @@ export const REQUIRED_SERVER_SECRETS = [
   'SMTP_PASSWORD',
 ] as const;
 
-export const OPTIONAL_SERVER_SECRETS = [
-  'DB_PASSWORD',
-  'CLOUDINARY_API_KEY',
-  'SMTP_USER',
-] as const;
+export const OPTIONAL_SERVER_SECRETS = ['DB_PASSWORD', 'CLOUDINARY_API_KEY', 'SMTP_USER'] as const;
 
 /**
  * Keywords indicating sensitive secret material.
@@ -58,7 +54,7 @@ export function isClientSafeVariableName(name: string): boolean {
 /**
  * Safely accesses a server-side secret.
  * Guarantees that client-exposed variables are never accidentally requested as secrets.
- * 
+ *
  * @param key Environment variable key name
  * @param options Configuration options (required in production, fallback)
  */
@@ -153,7 +149,13 @@ export const SECRET_SCAN_PATTERNS = [
   {
     name: 'Embedded Database Password in Connection URI',
     regex: /(?:postgres(?:ql)?|mysql):\/\/[^:\s]+:([^@\s]+)@[a-zA-Z0-9.-]+(?::\d+)?\/[^\s'"]+/i,
-    ignorePlaceholders: [':db_password@', ':password@', ':<password>@', ':your_password@', ':db_pass@'],
+    ignorePlaceholders: [
+      ':db_password@',
+      ':password@',
+      ':<password>@',
+      ':your_password@',
+      ':db_pass@',
+    ],
   },
   // 2. Private RSA / EC / PGP keys
   {
@@ -179,7 +181,7 @@ export const SECRET_SCAN_PATTERNS = [
 
 /**
  * Scans a string of file content for accidentally hardcoded secrets.
- * 
+ *
  * @param content Source code or configuration string to audit
  * @param filePath Optional file path for audit reporting
  */

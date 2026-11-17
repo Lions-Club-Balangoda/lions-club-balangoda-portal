@@ -8,27 +8,32 @@ interface ProjectCardProps {
 
 const PILLAR_STYLES: Record<ServicePillar, { badgeClass: string; label: string; icon: string }> = {
   HEALTHCARE: {
-    badgeClass: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    badgeClass:
+      'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
     label: 'Healthcare',
     icon: '🩺',
   },
   EDUCATION: {
-    badgeClass: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
+    badgeClass:
+      'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
     label: 'Education',
     icon: '📚',
   },
   ENVIRONMENT: {
-    badgeClass: 'bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300 border-teal-200 dark:border-teal-800',
+    badgeClass:
+      'bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300 border-teal-200 dark:border-teal-800',
     label: 'Environment',
     icon: '🌱',
   },
   POVERTY_RELIEF: {
-    badgeClass: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+    badgeClass:
+      'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     label: 'Poverty Relief',
     icon: '🤝',
   },
   OTHER: {
-    badgeClass: 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700',
+    badgeClass:
+      'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700',
     label: 'Community Service',
     icon: '🦁',
   },

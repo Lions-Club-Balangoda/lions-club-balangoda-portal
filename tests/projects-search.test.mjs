@@ -4,14 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Import domain logic and repository functions
-import {
-  filterProjects,
-  sanitizeSearchQuery,
-} from '../src/lib/projects.ts';
-import {
-  searchPublishedProjects,
-  getPublishedProjects,
-} from '../src/lib/projects-repository.ts';
+import { filterProjects, sanitizeSearchQuery } from '../src/lib/projects.ts';
+import { searchPublishedProjects, getPublishedProjects } from '../src/lib/projects-repository.ts';
 import { createTestDatabase } from '../src/lib/db.ts';
 import { SEED_PROJECTS } from '../src/data/mock-projects.ts';
 
@@ -23,10 +17,14 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
     testDb = createTestDatabase();
 
     // Insert author
-    testDb.prepare(`
+    testDb
+      .prepare(
+        `
       INSERT INTO users (user_id, username, email, password_hash, full_name, role)
       VALUES ('usr-test-search', 'search_author', 'author@lionsbalangoda.test', 'hash', 'Lion Search Admin', 'ADMIN')
-    `).run();
+    `
+      )
+      .run();
 
     const insertProject = testDb.prepare(`
       INSERT INTO projects (
@@ -193,13 +191,17 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
       const results = searchPublishedProjects({ query: sqlInjection }, testDb);
 
       // Must NOT return draft or archived projects (which a raw unparameterised query would leak)
-      assert.strictEqual(results.length, 0, 'SQL injection must yield 0 results through parameterised statement');
+      assert.strictEqual(
+        results.length,
+        0,
+        'SQL injection must yield 0 results through parameterised statement'
+      );
       const hasDraft = results.some((p) => p.status === 'DRAFT');
       assert.strictEqual(hasDraft, false);
     });
 
     it('sanitises query with script tags and runs parameterised search safely', () => {
-      const xssAttempt = "<script>document.cookie</script>Cataract";
+      const xssAttempt = '<script>document.cookie</script>Cataract';
       const results = searchPublishedProjects({ query: xssAttempt }, testDb);
 
       // After stripping <script> tags, "Cataract" remains and finds the project safely
@@ -221,19 +223,13 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
 
     it('combines keyword search with category filter resulting in 0 matches on category mismatch', () => {
       // "Cataract" exists in HEALTHCARE, so filtering under EDUCATION must return 0
-      const results = searchPublishedProjects(
-        { query: 'Cataract', category: 'EDUCATION' },
-        testDb
-      );
+      const results = searchPublishedProjects({ query: 'Cataract', category: 'EDUCATION' }, testDb);
       assert.strictEqual(results.length, 0);
     });
 
     it('combines keyword search with event year filter matching', () => {
       // "Reforestation" occurred in 2025
-      const match2025 = searchPublishedProjects(
-        { query: 'Reforestation', year: '2025' },
-        testDb
-      );
+      const match2025 = searchPublishedProjects({ query: 'Reforestation', year: '2025' }, testDb);
       assert.strictEqual(match2025.length, 1);
       assert.strictEqual(match2025[0].id, 'proj-pub-03');
 
@@ -273,10 +269,7 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
     });
 
     it('UI component source contains helpful empty state and dedicated clear search button', () => {
-      const componentPath = path.join(
-        process.cwd(),
-        'src/components/projects/ProjectsList.tsx'
-      );
+      const componentPath = path.join(process.cwd(), 'src/components/projects/ProjectsList.tsx');
       const source = fs.readFileSync(componentPath, 'utf8');
 
       // 1. Test for helpful empty state container
@@ -314,26 +307,17 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
   // AC5: Only published projects are returned
   describe('AC5: Public data privacy - only published projects returned', () => {
     it('strictly excludes DRAFT projects when searching for exact draft title', () => {
-      const searchDraft = searchPublishedProjects(
-        { query: 'Diabetes Screening Camp' },
-        testDb
-      );
+      const searchDraft = searchPublishedProjects({ query: 'Diabetes Screening Camp' }, testDb);
       assert.strictEqual(searchDraft.length, 0, 'Draft project must not be returned');
     });
 
     it('strictly excludes DRAFT projects when searching by draft summary content', () => {
-      const searchDraftSummary = searchPublishedProjects(
-        { query: 'mobile blood glucose' },
-        testDb
-      );
+      const searchDraftSummary = searchPublishedProjects({ query: 'mobile blood glucose' }, testDb);
       assert.strictEqual(searchDraftSummary.length, 0, 'Draft summary must not leak');
     });
 
     it('strictly excludes ARCHIVED projects when searching for exact archived title', () => {
-      const searchArchived = searchPublishedProjects(
-        { query: 'Past Eye Clinic 2019' },
-        testDb
-      );
+      const searchArchived = searchPublishedProjects({ query: 'Past Eye Clinic 2019' }, testDb);
       assert.strictEqual(searchArchived.length, 0, 'Archived project must not be returned');
     });
 
@@ -350,10 +334,7 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
   // AC6: Usable on mobile (360px)
   describe('AC6: Usable on mobile (360px viewport)', () => {
     it('UI component source enforces mobile responsiveness without horizontal page overflow', () => {
-      const componentPath = path.join(
-        process.cwd(),
-        'src/components/projects/ProjectsList.tsx'
-      );
+      const componentPath = path.join(process.cwd(), 'src/components/projects/ProjectsList.tsx');
       const source = fs.readFileSync(componentPath, 'utf8');
 
       // Test container has max-w-full and min-w-0 to prevent flex/grid overflow
@@ -363,10 +344,7 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
       );
 
       // Test search input has box-border and full width
-      assert.ok(
-        source.includes('box-border'),
-        'Search input must have box-border'
-      );
+      assert.ok(source.includes('box-border'), 'Search input must have box-border');
 
       // Test category pills use horizontal scroll without page overflow
       assert.ok(
@@ -375,11 +353,7 @@ describe('Published Projects Search by Keyword Slice (Acceptance Criteria Suite)
       );
 
       // Test grid uses single column on mobile 360px (grid-cols-1)
-      assert.ok(
-        source.includes('grid-cols-1'),
-        'Grid must use single column on mobile viewports'
-      );
+      assert.ok(source.includes('grid-cols-1'), 'Grid must use single column on mobile viewports');
     });
   });
 });
-

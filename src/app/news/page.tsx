@@ -24,7 +24,8 @@ export default function NewsPage() {
             News & Announcements
           </h1>
           <p className="mt-3 max-w-3xl text-base text-zinc-600 dark:text-zinc-400">
-            Read the latest updates, event briefings, and humanitarian impact reports directly from the Lions Club of Balangoda secretariat.
+            Read the latest updates, event briefings, and humanitarian impact reports directly from
+            the Lions Club of Balangoda secretariat.
           </p>
         </header>
 
@@ -36,4 +37,3 @@ export default function NewsPage() {
     </div>
   );
 }
-

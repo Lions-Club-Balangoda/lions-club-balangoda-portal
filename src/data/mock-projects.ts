@@ -10,9 +10,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'Annual Free Cataract Surgery & Vision Screening Camp',
     slug: 'annual-free-cataract-surgery-vision-camp-2026',
     category: 'HEALTHCARE',
-    summary: 'Provided free eye examinations for 450 rural residents and funded 68 cataract surgeries at Balangoda Base Hospital.',
-    description: 'In partnership with the District Health Directorate, our medical team screened elderly community members across 12 Grama Niladhari divisions. Beneficiaries received free corrective eyeglasses and post-operative medications.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Provided free eye examinations for 450 rural residents and funded 68 cataract surgeries at Balangoda Base Hospital.',
+    description:
+      'In partnership with the District Health Directorate, our medical team screened elderly community members across 12 Grama Niladhari divisions. Beneficiaries received free corrective eyeglasses and post-operative medications.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
     eventDate: '2026-03-15',
     location: 'Balangoda Base Hospital',
     status: 'PUBLISHED',
@@ -24,9 +27,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'School Supplies and Book Donation Drive for Rural Students',
     slug: 'school-supplies-book-donation-drive-2026',
     category: 'EDUCATION',
-    summary: 'Distributed essential stationery packs, textbooks, and backpacks to 280 underprivileged primary students in Medadumbara.',
-    description: 'Aiming to mitigate educational disparity in rural tea estate communities, the project equipped young students with books, geometry sets, school shoes, and stationery for the academic year.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Distributed essential stationery packs, textbooks, and backpacks to 280 underprivileged primary students in Medadumbara.',
+    description:
+      'Aiming to mitigate educational disparity in rural tea estate communities, the project equipped young students with books, geometry sets, school shoes, and stationery for the academic year.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80',
     eventDate: '2026-01-20',
     location: 'Medadumbara Maha Vidyalaya, Balangoda',
     status: 'PUBLISHED',
@@ -38,9 +44,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'Green Balangoda: Watershed Reforestation Campaign',
     slug: 'green-balangoda-watershed-reforestation-2025',
     category: 'ENVIRONMENT',
-    summary: 'Planted 1,200 native tree saplings along the upper Walawe river catchment zone to prevent soil erosion and landslides.',
-    description: 'Engaged Leo Club youth and local community volunteers to restore vital watershed vegetation, planting kumbuk, mee, and karanda saplings along vulnerable riverbanks in the Balangoda valley.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Planted 1,200 native tree saplings along the upper Walawe river catchment zone to prevent soil erosion and landslides.',
+    description:
+      'Engaged Leo Club youth and local community volunteers to restore vital watershed vegetation, planting kumbuk, mee, and karanda saplings along vulnerable riverbanks in the Balangoda valley.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
     eventDate: '2025-11-10',
     location: 'Upper Walawe Catchment Basin, Balangoda',
     status: 'PUBLISHED',
@@ -52,9 +61,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'Emergency Flood Relief and Dry Ration Distribution',
     slug: 'emergency-flood-relief-dry-rations-2025',
     category: 'POVERTY_RELIEF',
-    summary: 'Supplied emergency dry rations, clean drinking water, and hygiene kits to 150 flood-affected families in Kaltota.',
-    description: 'Rapid response relief effort following torrential monsoon rains in the Sabaragamuwa province. Lions volunteers mobilized essential food packages, baby nutrition packs, and water purification tablets.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Supplied emergency dry rations, clean drinking water, and hygiene kits to 150 flood-affected families in Kaltota.',
+    description:
+      'Rapid response relief effort following torrential monsoon rains in the Sabaragamuwa province. Lions volunteers mobilized essential food packages, baby nutrition packs, and water purification tablets.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
     eventDate: '2025-06-18',
     location: 'Kaltota Community Center, Balangoda',
     status: 'PUBLISHED',
@@ -66,9 +78,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'Mobile Diabetes Awareness & Blood Screening Clinic',
     slug: 'mobile-diabetes-awareness-screening-clinic-2026',
     category: 'HEALTHCARE',
-    summary: 'Screened 320 plantation workers for blood glucose levels and conducted medical consultations on diabetes prevention.',
-    description: 'Mobile health outreach initiative addressing the growing prevalence of chronic diabetes in estate sectors. Included HbA1c tests, lifestyle counseling, and referral slips for hospital follow-up.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Screened 320 plantation workers for blood glucose levels and conducted medical consultations on diabetes prevention.',
+    description:
+      'Mobile health outreach initiative addressing the growing prevalence of chronic diabetes in estate sectors. Included HbA1c tests, lifestyle counseling, and referral slips for hospital follow-up.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
     eventDate: '2026-02-28',
     location: 'Nonpareil Tea Estate Community Hall',
     status: 'PUBLISHED',
@@ -80,9 +95,12 @@ export const SEED_PROJECTS: Project[] = [
     title: 'Upcoming Youth Vocational IT Skills Workshop (Internal Draft)',
     slug: 'youth-vocational-it-skills-workshop-draft',
     category: 'EDUCATION',
-    summary: 'Planned 4-week computer literacy and digital marketing program for school leavers in Balangoda.',
-    description: 'Draft proposal undergoing executive board approval. Curriculum includes basic office tools, web navigation, and graphic design fundamentals.',
-    coverImageUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+    summary:
+      'Planned 4-week computer literacy and digital marketing program for school leavers in Balangoda.',
+    description:
+      'Draft proposal undergoing executive board approval. Curriculum includes basic office tools, web navigation, and graphic design fundamentals.',
+    coverImageUrl:
+      'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
     eventDate: '2026-12-01',
     location: 'Balangoda Public Library Auditorium',
     status: 'DRAFT', // DRAFT record: MUST NOT appear on public portal!

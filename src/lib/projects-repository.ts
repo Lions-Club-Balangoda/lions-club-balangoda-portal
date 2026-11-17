@@ -28,7 +28,7 @@ export interface SearchProjectsCriteria {
 
 /**
  * Searches and filters published projects from the database via strictly parameterised SQL.
- * 
+ *
  * Acceptance criteria:
  * - Visitors can search published projects by keyword across title and summary.
  * - Search input is sanitised and queries are parameterised.

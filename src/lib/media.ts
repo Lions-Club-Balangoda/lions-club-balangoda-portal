@@ -240,8 +240,13 @@ export async function uploadMediaAsset(
       const signatureString = `folder=${folder}&public_id=${publicId}&timestamp=${timestamp}${process.env.CLOUDINARY_API_SECRET}`;
       const signature = crypto.createHash('sha1').update(signatureString).digest('hex');
 
+      const arrayBuffer = new ArrayBuffer(fileBuffer.byteLength);
+      new Uint8Array(arrayBuffer).set(
+        new Uint8Array(fileBuffer.buffer, fileBuffer.byteOffset, fileBuffer.byteLength)
+      );
+
       const formData = new FormData();
-      formData.append('file', new Blob([fileBuffer], { type: validation.mimeType }), sanitizedName);
+      formData.append('file', new Blob([arrayBuffer], { type: validation.mimeType }), sanitizedName);
       formData.append('api_key', process.env.CLOUDINARY_API_KEY || '');
       formData.append('timestamp', timestamp.toString());
       formData.append('folder', folder);
@@ -257,7 +262,7 @@ export async function uploadMediaAsset(
         const errorText = await response.text();
         return {
           success: false,
-          error: `Cloudinary upload failed: ${response.statusText}`,
+          error: `Cloudinary upload failed: ${response.statusText}${errorText ? ` (${errorText})` : ''}`,
         };
       }
 

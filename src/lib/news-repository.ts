@@ -111,7 +111,10 @@ export function getPublishedNewsFromDb(
     return rows.map(mapRowToNewsItem);
   } catch (err) {
     // Defensive security: never leak raw SQL or stack trace
-    console.error('[NewsRepository] Error querying news: sanitized fallback used', (err as Error)?.message);
+    console.error(
+      '[NewsRepository] Error querying news: sanitized fallback used',
+      (err as Error)?.message
+    );
     return SEED_NEWS.filter((item) => item.status === 'PUBLISHED');
   }
 }
@@ -165,11 +168,13 @@ export function getPublishedNewsBySlugFromDb(
 
     return mapRowToNewsItem(row);
   } catch (err) {
-    console.error('[NewsRepository] Error querying news by slug: sanitized fallback used', (err as Error)?.message);
+    console.error(
+      '[NewsRepository] Error querying news by slug: sanitized fallback used',
+      (err as Error)?.message
+    );
     const fallback = SEED_NEWS.find(
       (item) => item.slug.toLowerCase() === slug.toLowerCase() && item.status === 'PUBLISHED'
     );
     return fallback || null;
   }
 }
-

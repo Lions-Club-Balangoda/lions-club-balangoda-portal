@@ -29,7 +29,11 @@ describe('Community Projects UI Presentation & States (LBW-10)', () => {
       // Date formatting verification
       const formatted = formatProjectDate(project.eventDate);
       assert.ok(formatted.length > 0, 'Formatted date must not be empty');
-      assert.strictEqual(project.status, 'PUBLISHED', 'Only PUBLISHED projects allowed in UI state');
+      assert.strictEqual(
+        project.status,
+        'PUBLISHED',
+        'Only PUBLISHED projects allowed in UI state'
+      );
     }
   });
 
@@ -72,8 +76,14 @@ describe('Community Projects UI Presentation & States (LBW-10)', () => {
     const hasDraft = uiState.items.some((p) => p.status === 'DRAFT' || p.id === 'draft-999');
     assert.strictEqual(hasDraft, false, 'Draft project must be excluded from UI presentation');
 
-    const hasArchived = uiState.items.some((p) => p.status === 'ARCHIVED' || p.id === 'archived-888');
-    assert.strictEqual(hasArchived, false, 'Archived project must be excluded from UI presentation');
+    const hasArchived = uiState.items.some(
+      (p) => p.status === 'ARCHIVED' || p.id === 'archived-888'
+    );
+    assert.strictEqual(
+      hasArchived,
+      false,
+      'Archived project must be excluded from UI presentation'
+    );
   });
 
   it('AC3: Given no projects exist, then a clear empty-state message is triggered', () => {

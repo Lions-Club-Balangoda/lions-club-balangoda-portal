@@ -46,4 +46,7 @@ updates:
       - 'github-actions'
     commit-message:
       prefix: 'chore(ci)'
-
+    ignore:
+      # gitleaks-action v3+ requires commercial organization license key
+      - dependency-name: 'gitleaks/gitleaks-action'
+        versions: ['>= 3.0.0']

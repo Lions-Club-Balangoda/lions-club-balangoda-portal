@@ -35,4 +35,3 @@ export const errorHandler: ErrorRequestHandler = (
     ...(isProduction ? {} : { stack: err.stack }),
   });
 };
-

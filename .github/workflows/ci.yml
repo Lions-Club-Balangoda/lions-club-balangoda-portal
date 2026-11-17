@@ -9,10 +9,6 @@
 #
 # All jobs must pass before a PR can be merged (enforce via GitHub branch
 # protection rules: Settings → Branches → Require status checks to pass).
-#
-# Secrets used: none for public CI steps.
-# No credentials are hard-coded here. Any future secrets (e.g., DATABASE_URL
-# for integration tests) must be added via GitHub → Settings → Secrets.
 # ==============================================================================
 
 name: CI
@@ -21,9 +17,11 @@ on:
   pull_request:
     branches:
       - main
+      - Dev
   push:
     branches:
       - main
+      - Dev
 
 # Cancel any in-progress run for the same PR/branch to save runner minutes.
 concurrency:
@@ -38,10 +36,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -53,8 +51,6 @@ jobs:
         run: npm run lint
 
       - name: Check Prettier formatting
-        # Only run if .prettierrc.json exists (added in scaffold branch).
-        # Falls back gracefully if Prettier isn't configured yet.
         run: |
           if [ -f ".prettierrc.json" ]; then
             npm run format:check
@@ -69,10 +65,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -87,23 +83,19 @@ jobs:
   build:
     name: Build (Next.js production)
     runs-on: ubuntu-latest
-    # Build depends on lint passing so we don't waste runner time on broken code.
     needs: lint
 
     env:
-      # Next.js requires these at build time. Provide safe placeholder values
-      # so the build step does not fail on missing env vars.
-      # Real values must NEVER be committed — configure via GitHub Secrets.
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       NEXTAUTH_SECRET: ci-build-placeholder-not-a-real-secret
       NEXTAUTH_URL: http://localhost:3000
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -113,4 +105,3 @@ jobs:
 
       - name: Build Next.js app
         run: npm run build
-

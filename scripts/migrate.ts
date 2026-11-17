@@ -94,4 +94,3 @@ runMigrations().catch((err) => {
   console.error('[migrate] Unexpected error:', err);
   process.exit(1);
 });
-

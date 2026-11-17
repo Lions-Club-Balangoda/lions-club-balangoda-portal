@@ -33,10 +33,7 @@ describe('Secrets Management & Secret Scan Suite (SEC-04)', () => {
       assert.ok(variableLines.length > 0, '.env.example must declare variables');
 
       for (const line of variableLines) {
-        assert.ok(
-          line.includes('='),
-          `Configuration line must be in KEY= format: "${line}"`
-        );
+        assert.ok(line.includes('='), `Configuration line must be in KEY= format: "${line}"`);
 
         const [key, ...rest] = line.split('=');
         const value = rest.join('=').trim();
@@ -81,10 +78,7 @@ describe('Secrets Management & Secret Scan Suite (SEC-04)', () => {
 
       for (const key of expectedKeys) {
         const regex = new RegExp(`^${key}=`, 'm');
-        assert.ok(
-          regex.test(content),
-          `.env.example must list variable '${key}='`
-        );
+        assert.ok(regex.test(content), `.env.example must list variable '${key}='`);
       }
     });
 
@@ -92,14 +86,8 @@ describe('Secrets Management & Secret Scan Suite (SEC-04)', () => {
       const gitignorePath = path.join(rootDir, '.gitignore');
       const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
 
-      assert.ok(
-        gitignoreContent.includes('.env'),
-        '.gitignore must ignore .env files'
-      );
-      assert.ok(
-        gitignoreContent.includes('.env.local'),
-        '.gitignore must ignore .env.local files'
-      );
+      assert.ok(gitignoreContent.includes('.env'), '.gitignore must ignore .env files');
+      assert.ok(gitignoreContent.includes('.env.local'), '.gitignore must ignore .env.local files');
       assert.ok(
         gitignoreContent.includes('!.env.example'),
         '.gitignore must explicitly keep .env.example tracked'
@@ -111,7 +99,8 @@ describe('Secrets Management & Secret Scan Suite (SEC-04)', () => {
   describe('AC3: Repository Secret Scan & Client Bundle Boundary', () => {
     it('detects and flags leaked real secrets in code or configuration', () => {
       // Test the scan engine against a simulated leak
-      const leakedString = 'const db = "postgresql://lion_admin:RealSuperSecretPassword123@db.balangodalions.org:5432/portal";';
+      const leakedString =
+        'const db = "postgresql://lion_admin:RealSuperSecretPassword123@db.balangodalions.org:5432/portal";';
       const scanResult = scanContentForExposedSecrets(leakedString, 'mock-leak.ts');
 
       assert.strictEqual(scanResult.clean, false);
@@ -244,8 +233,10 @@ describe('Secrets Management & Secret Scan Suite (SEC-04)', () => {
       assert.strictEqual(isPlaceholderSecret('smtp.example.com'), true);
 
       // Real high-entropy values
-      assert.strictEqual(isPlaceholderSecret('7f8b9a2c3d4e5f60718293a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4'), false);
+      assert.strictEqual(
+        isPlaceholderSecret('7f8b9a2c3d4e5f60718293a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4'),
+        false
+      );
     });
   });
 });
-
