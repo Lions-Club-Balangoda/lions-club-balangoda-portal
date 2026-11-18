@@ -133,9 +133,7 @@ export function getUniqueProjectYears(projects: Project[] = SEED_PROJECTS): stri
  * Extract unique service pillar categories from published projects
  * Satisfies LBW-35 AC-3: "Filter options come from real published data (no empty categories/years)"
  */
-export function getUniqueProjectCategories(
-  projects: Project[] = SEED_PROJECTS
-): ServicePillar[] {
+export function getUniqueProjectCategories(projects: Project[] = SEED_PROJECTS): ServicePillar[] {
   const published = projects.filter((p) => !p.status || p.status === 'PUBLISHED');
   const categories = new Set<ServicePillar>();
   for (const project of published) {
@@ -193,8 +191,7 @@ export function parseProjectFilterParams(
     queryParam = sp.get('q') || sp.get('query') || undefined;
   } else if (searchParams) {
     const raw = searchParams as Record<string, string | string[] | undefined>;
-    const getFirst = (val: string | string[] | undefined) =>
-      Array.isArray(val) ? val[0] : val;
+    const getFirst = (val: string | string[] | undefined) => (Array.isArray(val) ? val[0] : val);
     categoryParam = getFirst(raw.category);
     yearParam = getFirst(raw.year);
     queryParam = getFirst(raw.q) || getFirst(raw.query);

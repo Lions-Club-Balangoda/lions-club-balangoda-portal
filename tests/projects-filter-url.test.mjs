@@ -53,9 +53,7 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
       });
       assert.strictEqual(healthcare2026.length, 2);
       assert.ok(
-        healthcare2026.every(
-          (p) => p.category === 'HEALTHCARE' && p.eventDate.startsWith('2026')
-        )
+        healthcare2026.every((p) => p.category === 'HEALTHCARE' && p.eventDate.startsWith('2026'))
       );
 
       const healthcare2025 = filterProjects(SEED_PROJECTS, {
@@ -110,9 +108,7 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
 
       // Verify that every returned category is actually represented by at least one published project
       for (const cat of publishedCategories) {
-        const matches = SEED_PROJECTS.filter(
-          (p) => p.status === 'PUBLISHED' && p.category === cat
-        );
+        const matches = SEED_PROJECTS.filter((p) => p.status === 'PUBLISHED' && p.category === cat);
         assert.ok(
           matches.length > 0,
           `Category ${cat} must have at least one published project in data`
@@ -166,10 +162,7 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
   // AC4: Empty results display a useful message
   describe('AC4: Empty state message and reset actions in UI', () => {
     it('ProjectsList UI component contains contextual empty state and reset action buttons', () => {
-      const componentPath = path.join(
-        process.cwd(),
-        'src/components/projects/ProjectsList.tsx'
-      );
+      const componentPath = path.join(process.cwd(), 'src/components/projects/ProjectsList.tsx');
       const source = fs.readFileSync(componentPath, 'utf8');
 
       assert.ok(
@@ -233,19 +226,22 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
     });
 
     it('safely handles invalid or missing URL parameters with fallback defaults', () => {
-      const searchParams = new URLSearchParams('category=INVALID_PILLAR&year=abcd&q=<script>alert(1)</script>');
+      const searchParams = new URLSearchParams(
+        'category=INVALID_PILLAR&year=abcd&q=<script>alert(1)</script>'
+      );
       const parsed = parseProjectFilterParams(searchParams);
 
       assert.strictEqual(parsed.category, 'ALL', 'Invalid category should fallback to ALL');
       assert.strictEqual(parsed.year, 'ALL', 'Invalid year format should fallback to ALL');
-      assert.strictEqual(parsed.query.includes('<script>'), false, 'Search query must be sanitized');
+      assert.strictEqual(
+        parsed.query.includes('<script>'),
+        false,
+        'Search query must be sanitized'
+      );
     });
 
     it('ProjectsList component source imports Next.js navigation hooks for URL sync', () => {
-      const componentPath = path.join(
-        process.cwd(),
-        'src/components/projects/ProjectsList.tsx'
-      );
+      const componentPath = path.join(process.cwd(), 'src/components/projects/ProjectsList.tsx');
       const source = fs.readFileSync(componentPath, 'utf8');
 
       assert.ok(source.includes('useSearchParams'), 'Must use useSearchParams hook');
@@ -258,10 +254,7 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
     });
 
     it('Projects page wraps ProjectsList in a Suspense boundary for SSR safety', () => {
-      const pagePath = path.join(
-        process.cwd(),
-        'src/app/projects/page.tsx'
-      );
+      const pagePath = path.join(process.cwd(), 'src/app/projects/page.tsx');
       const source = fs.readFileSync(pagePath, 'utf8');
 
       assert.ok(source.includes('<Suspense'), 'Page must wrap list in Suspense');
@@ -272,15 +265,21 @@ describe('Project Category and Year Filtering with URL Sharing (LBW-35, EPIC-4) 
   // AC6: Layout remains usable at 360px
   describe('AC6: Usable layout at 360px viewport', () => {
     it('ProjectsList component source enforces mobile responsiveness safeguards', () => {
-      const componentPath = path.join(
-        process.cwd(),
-        'src/components/projects/ProjectsList.tsx'
-      );
+      const componentPath = path.join(process.cwd(), 'src/components/projects/ProjectsList.tsx');
       const source = fs.readFileSync(componentPath, 'utf8');
 
-      assert.ok(source.includes('w-full max-w-full min-w-0'), 'Must constrain width on narrow mobile viewports');
-      assert.ok(source.includes('overflow-x-auto'), 'Category tabs must scroll horizontally without breaking page width');
-      assert.ok(source.includes('grid-cols-1'), 'Projects grid must use single-column display on mobile');
+      assert.ok(
+        source.includes('w-full max-w-full min-w-0'),
+        'Must constrain width on narrow mobile viewports'
+      );
+      assert.ok(
+        source.includes('overflow-x-auto'),
+        'Category tabs must scroll horizontally without breaking page width'
+      );
+      assert.ok(
+        source.includes('grid-cols-1'),
+        'Projects grid must use single-column display on mobile'
+      );
     });
   });
 });

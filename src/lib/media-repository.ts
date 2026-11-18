@@ -1,7 +1,7 @@
 /**
  * src/lib/media-repository.ts
  * Parameterized Database Repository for Media Assets
- * 
+ *
  * Task: LBW-42 (Configure media storage for image uploads)
  * Security Standard: SEC-02 (Parameterized SQL queries, zero SQL injection)
  * Course: IS5109 Community Project (Group 14)

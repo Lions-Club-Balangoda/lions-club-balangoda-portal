@@ -23,12 +23,25 @@ import { isClientSafeVariableName } from '../src/lib/auth/secrets.ts';
 
 describe('Media Storage & Image Upload Pipeline (LBW-42, EPIC-6) Test Suite', () => {
   // Sample binary buffers with valid magic bytes
-  const VALID_JPEG_BUFFER = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]);
-  const VALID_PNG_BUFFER = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00]);
+  const VALID_JPEG_BUFFER = Buffer.from([
+    0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46,
+  ]);
+  const VALID_PNG_BUFFER = Buffer.from([
+    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
+  ]);
   const VALID_WEBP_BUFFER = Buffer.from([
-    0x52, 0x49, 0x46, 0x46, // RIFF
-    0x24, 0x00, 0x00, 0x00, // length
-    0x57, 0x45, 0x42, 0x50, // WEBP
+    0x52,
+    0x49,
+    0x46,
+    0x46, // RIFF
+    0x24,
+    0x00,
+    0x00,
+    0x00, // length
+    0x57,
+    0x45,
+    0x42,
+    0x50, // WEBP
   ]);
 
   // AC1: Media account/bucket configured with keys in environment secrets only
@@ -46,7 +59,11 @@ describe('Media Storage & Image Upload Pipeline (LBW-42, EPIC-6) Test Suite', ()
       for (const line of lines) {
         if (line.startsWith('CLOUDINARY_')) {
           const [, value] = line.split('=');
-          assert.strictEqual(value.trim(), '', `Cloudinary variable in .env.example must be empty: "${line}"`);
+          assert.strictEqual(
+            value.trim(),
+            '',
+            `Cloudinary variable in .env.example must be empty: "${line}"`
+          );
         }
       }
     });
@@ -97,7 +114,9 @@ describe('Media Storage & Image Upload Pipeline (LBW-42, EPIC-6) Test Suite', ()
     });
 
     it('rejects disallowed file types (SVG, PDF, EXE, HTML script)', () => {
-      const svgBuffer = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
+      const svgBuffer = Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'
+      );
       const svgResult = validateImageBuffer(svgBuffer, 'exploit.svg');
       assert.strictEqual(svgResult.valid, false);
       assert.ok(svgResult.error?.includes('Unsupported file type'));
@@ -195,7 +214,8 @@ describe('Media Storage & Image Upload Pipeline (LBW-42, EPIC-6) Test Suite', ()
       const mockAsset = {
         assetId: 'ast-test-001',
         publicId: 'projects/2026-cataract-screening',
-        secureUrl: 'https://res.cloudinary.com/lions-balangoda/image/upload/f_auto,q_auto/projects/2026-cataract-screening.jpg',
+        secureUrl:
+          'https://res.cloudinary.com/lions-balangoda/image/upload/f_auto,q_auto/projects/2026-cataract-screening.jpg',
         fileName: 'cataract-screening.jpg',
         fileType: 'image/jpeg',
         fileSizeBytes: 1048576,
@@ -234,4 +254,3 @@ describe('Media Storage & Image Upload Pipeline (LBW-42, EPIC-6) Test Suite', ()
     });
   });
 });
-

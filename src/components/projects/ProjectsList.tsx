@@ -43,9 +43,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({
     initialFiltersFromUrl.category || 'ALL'
   );
   const [searchQuery, setSearchQuery] = useState(initialFiltersFromUrl.query || '');
-  const [selectedYear, setSelectedYear] = useState<string>(
-    initialFiltersFromUrl.year || 'ALL'
-  );
+  const [selectedYear, setSelectedYear] = useState<string>(initialFiltersFromUrl.year || 'ALL');
 
   const currentParamsString = searchParams?.toString() || '';
   const [prevParamsString, setPrevParamsString] = useState(currentParamsString);

@@ -1,7 +1,7 @@
 /**
  * src/lib/media.ts
  * Cloudinary Media Storage Helper & Image Upload Pipeline
- * 
+ *
  * Task: LBW-42 (Configure media storage for image uploads)
  * Security Standard: SEC-04 (Secrets strictly in environment, no secrets in client)
  * Course: IS5109 Community Project (Group 14)
@@ -49,7 +49,8 @@ export function getMediaStorageConfig(): {
   const apiSecret = process.env.CLOUDINARY_API_SECRET?.trim() || '';
 
   const isConfigured = Boolean(cloudName && apiKey && apiSecret);
-  const isStagingFallback = !isConfigured || process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
+  const isStagingFallback =
+    !isConfigured || process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
 
   return {
     configured: isConfigured,
@@ -65,12 +66,14 @@ export function getMediaStorageConfig(): {
  */
 export function sanitizeFileName(rawFileName: string): string {
   if (!rawFileName) return 'unnamed-file';
-  return rawFileName
-    .replace(/[/\\]/g, '') // remove path separators
-    .replace(/^\.+/, '') // remove leading dots
-    .replace(/\.\.+/g, '') // prevent directory traversal
-    .replace(/[^a-zA-Z0-9._-]/g, '_') // only allow safe alphanumeric characters
-    .trim() || 'unnamed-file';
+  return (
+    rawFileName
+      .replace(/[/\\]/g, '') // remove path separators
+      .replace(/^\.+/, '') // remove leading dots
+      .replace(/\.\.+/g, '') // prevent directory traversal
+      .replace(/[^a-zA-Z0-9._-]/g, '_') // only allow safe alphanumeric characters
+      .trim() || 'unnamed-file'
+  );
 }
 
 /**
@@ -227,7 +230,9 @@ export async function uploadMediaAsset(
   }
 
   const config = getMediaStorageConfig();
-  const folder = options.folder ? options.folder.replace(/[^a-zA-Z0-9_-]/g, '_') : 'lions-balangoda';
+  const folder = options.folder
+    ? options.folder.replace(/[^a-zA-Z0-9_-]/g, '_')
+    : 'lions-balangoda';
   const assetId = crypto.randomUUID();
   const fileExtension = validation.mimeType.split('/')[1].replace('jpeg', 'jpg');
   const publicId = `${folder}/${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
@@ -246,17 +251,24 @@ export async function uploadMediaAsset(
       );
 
       const formData = new FormData();
-      formData.append('file', new Blob([arrayBuffer], { type: validation.mimeType }), sanitizedName);
+      formData.append(
+        'file',
+        new Blob([arrayBuffer], { type: validation.mimeType }),
+        sanitizedName
+      );
       formData.append('api_key', process.env.CLOUDINARY_API_KEY || '');
       formData.append('timestamp', timestamp.toString());
       formData.append('folder', folder);
       formData.append('public_id', publicId);
       formData.append('signature', signature);
 
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${config.cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();

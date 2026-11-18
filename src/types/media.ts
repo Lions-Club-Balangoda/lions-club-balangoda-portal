@@ -1,7 +1,7 @@
 /**
  * src/types/media.ts
  * Domain Types for Media Asset Management & Cloudinary CDN Storage
- * 
+ *
  * Aligned with Database Schema Specification (Docs/database-schema-specification.md)
  * Task: LBW-42 (Configure media storage for image uploads)
  * Course: IS5109 Community Project (Group 14)
@@ -52,4 +52,3 @@ export interface MediaUploadResult {
   bytes?: number;
   error?: string;
 }
-
