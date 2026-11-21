@@ -22,6 +22,23 @@ function initSchema(db: DatabaseSync) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS media_assets (
+      asset_id TEXT PRIMARY KEY,
+      public_id TEXT NOT NULL UNIQUE,
+      secure_url TEXT NOT NULL,
+      file_name TEXT,
+      file_type TEXT NOT NULL,
+      file_size_bytes INTEGER,
+      width INTEGER,
+      height INTEGER,
+      alt_text TEXT,
+      uploaded_by TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (uploaded_by) REFERENCES users(user_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_media_assets_created ON media_assets(created_at);
+
     CREATE TABLE IF NOT EXISTS projects (
       project_id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
