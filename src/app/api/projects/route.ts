@@ -13,7 +13,7 @@ import { searchPublishedProjects } from '../../../lib/projects-repository';
  * 5. In the event of a database or server failure, returns a friendly error message
  *    with HTTP 500 without leaking stack traces or SQL schemas.
  */
-export async function GET(request?: Request | NextRequest) {
+export async function GET(request: Request | NextRequest) {
   try {
     let query = '';
     let category = 'ALL';
