@@ -7,6 +7,20 @@ export type ServicePillar = 'HEALTHCARE' | 'EDUCATION' | 'ENVIRONMENT' | 'POVERT
 
 export type ContentStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
+export interface ProjectImpactMetric {
+  label: string;
+  value: number | string;
+  prefix?: string | null;
+  suffix?: string | null;
+}
+
+export interface ProjectGalleryImage {
+  id?: string;
+  imageUrl: string;
+  caption?: string | null;
+  displayOrder?: number;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -20,8 +34,14 @@ export interface Project {
   status: ContentStatus;
   publishedAt?: string | null;
   authorId?: string;
+  authorName?: string | null;
   createdAt: string;
   updatedAt: string;
+  // Optional impact metrics (where present)
+  impactMetrics?: ProjectImpactMetric[];
+  // Optional photograph gallery (where available)
+  gallery?: ProjectGalleryImage[];
+  photos?: string[];
 }
 
 export interface ProjectFilterCriteria {

@@ -1,104 +1,50 @@
-/**
- * src/middleware.ts
- * Next.js Edge-Compatible Administrative & RBAC Route Middleware
- *
- * Story: LBW-39 (Role-based access control - administrator and editor)
- * Acceptance Criteria:
- *   - AC2: Unauthenticated requests to /admin/* routes reject (401) and redirect UI to login screen
- *   - AC3: User without required role receives 403 on restricted operations
- *   - AC4: Authorization enforced on server, not solely by hiding UI
- *   - AC5: Error responses contain no stack traces or internal details
- *
- * Security Standard: SEC-02, SEC-04
- */
-
-import { NextResponse } from 'next/server.js';
-import type { NextRequest } from 'next/server.js';
-import { verifySessionToken, SESSION_COOKIE_NAME } from './lib/auth/session.ts';
-import { getAuthSecret, createDefensiveAuthResponse } from './lib/auth/guards.ts';
+import { NextResponse, type NextRequest } from 'next/server';
+import { verifyCsrfRequest } from './lib/security/csrf';
+import { getSecurityHeaders } from './lib/security/headers';
 
 /**
- * Super-Admin Only Routes (Require ADMIN role)
- * Editors are rejected with 403 Forbidden.
+ * Global Edge Security Middleware (SEC-01, SEC-03, SEC-05)
+ *
+ * Enforces:
+ * 1. Anti-CSRF verification on all state-changing requests (POST, PUT, PATCH, DELETE).
+ * 2. Origin and Sec-Fetch-Site validation.
+ * 3. Security response headers (CSP, HSTS, frame protections, nosniff, referrer policy).
  */
-const ADMIN_ONLY_PATHS = [
-  '/admin/users',
-  '/admin/settings',
-  '/api/admin/users',
-  '/api/admin/submissions/export',
-];
-
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Allow login page and public assets to bypass middleware
-  if (pathname === '/admin/login' || pathname.startsWith('/_next') || pathname.includes('.')) {
-    return NextResponse.next();
+export function middleware(request: NextRequest) {
+  // 1. Anti-CSRF check for state-changing HTTP requests
+  const csrfResult = verifyCsrfRequest(request);
+  if (!csrfResult.valid) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: csrfResult.reason || 'CSRF verification failed: Request blocked.',
+      },
+      {
+        status: csrfResult.statusCode || 403,
+      }
+    );
   }
 
-  // Check if the current route is an administrative page or protected API
-  const isAdminPage = pathname.startsWith('/admin');
-  const isAdminApi = pathname.startsWith('/api/admin');
+  // 2. Proceed with request processing
+  const response = NextResponse.next();
 
-  if (!isAdminPage && !isAdminApi) {
-    return NextResponse.next();
+  // 3. Attach standard security headers
+  const securityHeaders = getSecurityHeaders();
+  for (const header of securityHeaders) {
+    response.headers.set(header.key, header.value);
   }
 
-  // 1. Extract session token from cookie or Authorization header
-  const tokenFromCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  const authHeader = request.headers.get('authorization');
-  const tokenFromHeader = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
-  const token = tokenFromCookie || tokenFromHeader;
-
-  const secret = getAuthSecret();
-  const user = await verifySessionToken(token, secret);
-
-  // 2. AC2: Handle unauthenticated requests
-  if (!user) {
-    if (isAdminApi) {
-      // API requests receive 401 Unauthorized JSON response
-      return createDefensiveAuthResponse(
-        401,
-        'Authentication required. Please sign in to access this API.'
-      );
-    }
-
-    // Page requests redirect to /admin/login with redirect query param
-    const loginUrl = new URL('/admin/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // 3. AC3: Enforce role-based access for Administrator-only paths
-  const isAdminOnlyRoute = ADMIN_ONLY_PATHS.some((path) => pathname.startsWith(path));
-  if (isAdminOnlyRoute && user.role !== 'ADMIN') {
-    if (isAdminApi) {
-      return createDefensiveAuthResponse(
-        403,
-        'Access denied. Administrator privilege is required for this operation.'
-      );
-    }
-
-    // For web page navigation, redirect to dashboard with access denial notice
-    const dashboardUrl = new URL('/admin', request.url);
-    dashboardUrl.searchParams.set('error', 'forbidden');
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  // 4. Attach verified user headers for downstream server components and handlers
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-user-id', user.userId);
-  requestHeaders.set('x-user-role', user.role);
-  requestHeaders.set('x-user-email', user.email);
-  requestHeaders.set('x-user-name', encodeURIComponent(user.fullName));
-
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: [
+    /*
+     * Apply middleware to all request paths except:
+     * - _next/static (static client bundles)
+     * - _next/image (image optimization files)
+     * - favicon.ico (metadata icon)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
 };

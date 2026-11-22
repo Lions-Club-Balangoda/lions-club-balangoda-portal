@@ -1,65 +1,109 @@
-/**
- * src/app/api/admin/projects/[id]/route.ts
- * Protected Project Item Management Endpoint
- *
- * Story: LBW-39 (AC1, AC3: Only Administrator can delete content; Editor can edit/publish)
- * Security Standard: SEC-02, SEC-04
- */
-
-import { NextResponse } from 'next/server';
-import { requirePermission, requireAuth } from '../../../../../lib/auth/guards.ts';
+import { NextResponse, type NextRequest } from 'next/server.js';
+import { authorizeRequest } from '../../../../../lib/auth/session.ts';
+import {
+  getProjectById,
+  updateProject,
+  deleteProject,
+  type UpdateProjectInput,
+} from '../../../../../lib/projects-repository.ts';
+import { createSafeErrorResponse } from '../../../../../lib/security/safe-error.ts';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(request: Request, context: RouteContext) {
-  const auth = await requireAuth(request);
-  if (auth.errorResponse) {
-    return auth.errorResponse;
+/**
+ * CMS Admin Route: GET /api/admin/projects/[id]
+ */
+export async function GET(request: Request | NextRequest, context: RouteContext) {
+  const auth = authorizeRequest(request, ['ADMIN', 'EDITOR']);
+  if (!auth.authorized) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.statusCode });
   }
 
-  const { id } = await context.params;
+  try {
+    const { id } = await context.params;
+    const project = getProjectById(id);
 
-  return NextResponse.json({
-    success: true,
-    data: {
-      projectId: id,
-      title: 'Community Eye Clinic 2026',
-      status: 'PUBLISHED',
-      category: 'Healthcare',
-    },
-  });
+    if (!project) {
+      return NextResponse.json({ success: false, error: 'Project not found.' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: project }, { status: 200 });
+  } catch (err) {
+    return createSafeErrorResponse(err, {
+      statusCode: 500,
+      fallbackMessage: 'Failed to retrieve project record.',
+      trackingPrefix: 'API /api/admin/projects/[id] GET',
+    });
+  }
 }
 
-export async function PUT(request: Request, context: RouteContext) {
-  // AC1: Both ADMIN and EDITOR can update content
-  const auth = await requirePermission(request, 'PROJECTS', 'UPDATE');
-  if (auth.errorResponse) {
-    return auth.errorResponse;
+/**
+ * CMS Admin Route: PUT/PATCH /api/admin/projects/[id]
+ */
+export async function PUT(request: Request | NextRequest, context: RouteContext) {
+  const auth = authorizeRequest(request, ['ADMIN', 'EDITOR']);
+  if (!auth.authorized) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.statusCode });
   }
 
-  const { id } = await context.params;
-  const body = await request.json().catch(() => ({}));
+  try {
+    const { id } = await context.params;
+    const body = (await request.json().catch(() => ({}))) as UpdateProjectInput;
 
-  return NextResponse.json({
-    success: true,
-    message: `Project ${id} updated successfully.`,
-    data: { projectId: id, ...body },
-  });
+    const updated = updateProject(id, body);
+    if (!updated) {
+      return NextResponse.json({ success: false, error: 'Project not found.' }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { success: true, data: updated, message: 'Project updated successfully.' },
+      { status: 200 }
+    );
+  } catch (err) {
+    return createSafeErrorResponse(err, {
+      statusCode: 500,
+      fallbackMessage: 'Failed to update project record.',
+      trackingPrefix: 'API /api/admin/projects/[id] PUT',
+    });
+  }
 }
 
-export async function DELETE(request: Request, context: RouteContext) {
-  // AC1, AC3: ONLY Administrator can delete content! Editor receives 403 Forbidden.
-  const auth = await requirePermission(request, 'PROJECTS', 'DELETE');
-  if (auth.errorResponse) {
-    return auth.errorResponse;
+export { PUT as PATCH };
+
+/**
+ * CMS Admin Route: DELETE /api/admin/projects/[id]
+ * Strictly restricted to ADMIN role (FR-06 / SEC-05 role enforcement).
+ * EDITORS receive 403 Forbidden.
+ */
+export async function DELETE(request: Request | NextRequest, context: RouteContext) {
+  // Enforce ADMIN role strictly:
+  const auth = authorizeRequest(request, ['ADMIN']);
+  if (!auth.authorized) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.statusCode });
   }
 
-  const { id } = await context.params;
+  try {
+    const { id } = await context.params;
+    const deleted = deleteProject(id);
 
-  return NextResponse.json({
-    success: true,
-    message: `Project ${id} permanently deleted.`,
-  });
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, error: 'Project not found or already deleted.' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, message: 'Project permanently deleted.' },
+      { status: 200 }
+    );
+  } catch (err) {
+    return createSafeErrorResponse(err, {
+      statusCode: 500,
+      fallbackMessage: 'Failed to delete project record.',
+      trackingPrefix: 'API /api/admin/projects/[id] DELETE',
+    });
+  }
 }
