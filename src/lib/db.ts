@@ -120,6 +120,22 @@ function initSchema(db: DatabaseSync) {
 
     CREATE INDEX IF NOT EXISTS idx_exec_members_term_order ON executive_members(term_id, display_order ASC);
     CREATE INDEX IF NOT EXISTS idx_exec_members_status ON executive_members(status);
+
+    CREATE TABLE IF NOT EXISTS volunteer_applications (
+      application_id TEXT PRIMARY KEY,
+      full_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone_number TEXT NOT NULL,
+      area_of_interest TEXT NOT NULL,
+      motivation_statement TEXT,
+      status TEXT NOT NULL DEFAULT 'New',
+      submitted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_volunteers_email ON volunteer_applications(email);
+    CREATE INDEX IF NOT EXISTS idx_volunteers_submitted ON volunteer_applications(submitted_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_volunteers_status ON volunteer_applications(status);
   `);
 }
 
