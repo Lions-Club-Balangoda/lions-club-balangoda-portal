@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { verifyCsrfRequest } from './lib/security/csrf';
-import { getSecurityHeaders } from './lib/security/headers';
+import { NextResponse, type NextRequest } from 'next/server.js';
+import { verifyCsrfRequest } from './lib/security/csrf.ts';
+import { getSecurityHeaders } from './lib/security/headers.ts';
 
 /**
  * Global Edge Security Middleware (SEC-01, SEC-03, SEC-05)
@@ -25,10 +25,51 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // 2. Proceed with request processing
+  // 2. Admin Route Protection & Authentication Redirection (LBW-43 AC-3)
+  const { pathname } = request.nextUrl;
+  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+    const sessionCookie =
+      request.cookies.get('lions_session_token')?.value ||
+      request.cookies.get('session_token')?.value;
+
+    const authHeader = request.headers.get('authorization');
+    const bearerToken =
+      authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : null;
+
+    const token = sessionCookie || bearerToken;
+    let hasValidToken = false;
+
+    if (token && typeof token === 'string' && token.includes('.')) {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        try {
+          let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+          while (base64.length % 4) {
+            base64 += '=';
+          }
+          const payloadJson = atob(base64);
+          const payload = JSON.parse(payloadJson);
+          const now = Math.floor(Date.now() / 1000);
+          if (payload && (!payload.exp || payload.exp > now)) {
+            hasValidToken = true;
+          }
+        } catch {
+          hasValidToken = false;
+        }
+      }
+    }
+
+    if (!hasValidToken) {
+      const loginUrl = new URL('/admin/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // 3. Proceed with request processing
   const response = NextResponse.next();
 
-  // 3. Attach standard security headers
+  // 4. Attach standard security headers
   const securityHeaders = getSecurityHeaders();
   for (const header of securityHeaders) {
     response.headers.set(header.key, header.value);
