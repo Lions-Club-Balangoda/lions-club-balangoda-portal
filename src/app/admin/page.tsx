@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { UserRole } from '../../types/rbac';
@@ -149,70 +149,81 @@ export default function AdminDashboardPage() {
   }, [router]);
 
   // Load live counts if available
-  const fetchLiveMetrics = useCallback(async () => {
-    setMetricsLoading(true);
-    setMetricsError(null);
-
-    try {
-      // Parallel fetches for available resources
-      const [projRes, newsRes, volRes] = await Promise.allSettled([
-        fetch('/api/admin/projects'),
-        fetch('/api/admin/news'),
-        fetch('/api/admin/submissions/volunteers'),
-      ]);
-
-      let activeProjects = 4;
-      let draftProjects = 1;
-      let publishedNews = 6;
-      let pinnedAnnouncements = 2;
-      let pendingVolunteers = 3;
-
-      if (projRes.status === 'fulfilled' && projRes.value.ok) {
-        const pData = await projRes.value.json();
-        if (pData.data && Array.isArray(pData.data)) {
-          const list = pData.data;
-          activeProjects = list.filter((p: { status?: string }) => p.status === 'PUBLISHED').length;
-          draftProjects = list.filter((p: { status?: string }) => p.status === 'DRAFT').length;
-        }
-      }
-
-      if (newsRes.status === 'fulfilled' && newsRes.value.ok) {
-        const nData = await newsRes.value.json();
-        if (nData.data && Array.isArray(nData.data)) {
-          const list = nData.data;
-          publishedNews = list.filter((n: { status?: string }) => n.status === 'PUBLISHED').length;
-          pinnedAnnouncements = list.filter((n: { isPinned?: boolean }) => Boolean(n.isPinned)).length;
-        }
-      }
-
-      if (volRes.status === 'fulfilled' && volRes.value.ok) {
-        const vData = await volRes.value.json();
-        if (vData.data && Array.isArray(vData.data)) {
-          const list = vData.data;
-          pendingVolunteers = list.filter((v: { status?: string }) => v.status === 'PENDING').length;
-        }
-      }
-
-      setMetrics({
-        activeProjects,
-        draftProjects,
-        publishedNews,
-        pinnedAnnouncements,
-        pendingVolunteers,
-        unresolvedInquiries: 2,
-      });
-    } catch {
-      setMetricsError('Could not refresh real-time metrics. Showing cached counts.');
-    } finally {
-      setMetricsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    if (currentUser) {
-      fetchLiveMetrics();
+    if (!currentUser) return;
+
+    let ignore = false;
+
+    async function loadMetrics() {
+      try {
+        // Parallel fetches for available resources
+        const [projRes, newsRes, volRes] = await Promise.allSettled([
+          fetch('/api/admin/projects'),
+          fetch('/api/admin/news'),
+          fetch('/api/admin/submissions/volunteers'),
+        ]);
+
+        if (ignore) return;
+
+        let activeProjects = 4;
+        let draftProjects = 1;
+        let publishedNews = 6;
+        let pinnedAnnouncements = 2;
+        let pendingVolunteers = 3;
+
+        if (projRes.status === 'fulfilled' && projRes.value.ok) {
+          const pData = await projRes.value.json();
+          if (pData.data && Array.isArray(pData.data)) {
+            const list = pData.data;
+            activeProjects = list.filter((p: { status?: string }) => p.status === 'PUBLISHED').length;
+            draftProjects = list.filter((p: { status?: string }) => p.status === 'DRAFT').length;
+          }
+        }
+
+        if (newsRes.status === 'fulfilled' && newsRes.value.ok) {
+          const nData = await newsRes.value.json();
+          if (nData.data && Array.isArray(nData.data)) {
+            const list = nData.data;
+            publishedNews = list.filter((n: { status?: string }) => n.status === 'PUBLISHED').length;
+            pinnedAnnouncements = list.filter((n: { isPinned?: boolean }) => Boolean(n.isPinned)).length;
+          }
+        }
+
+        if (volRes.status === 'fulfilled' && volRes.value.ok) {
+          const vData = await volRes.value.json();
+          if (vData.data && Array.isArray(vData.data)) {
+            const list = vData.data;
+            pendingVolunteers = list.filter((v: { status?: string }) => v.status === 'PENDING').length;
+          }
+        }
+
+        if (!ignore) {
+          setMetrics({
+            activeProjects,
+            draftProjects,
+            publishedNews,
+            pinnedAnnouncements,
+            pendingVolunteers,
+            unresolvedInquiries: 2,
+          });
+        }
+      } catch {
+        if (!ignore) {
+          setMetricsError('Could not refresh real-time metrics. Showing cached counts.');
+        }
+      } finally {
+        if (!ignore) {
+          setMetricsLoading(false);
+        }
+      }
     }
-  }, [currentUser, fetchLiveMetrics]);
+
+    void loadMetrics();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentUser]);
 
   const handleSignOut = async () => {
     try {

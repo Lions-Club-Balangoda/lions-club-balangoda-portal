@@ -43,7 +43,7 @@ function mapRowToNewsItem(row: RawNewsRow): NewsItem {
     newsType: row.newsType,
     isPinned: Boolean(row.isPinned),
     status: row.status,
-    publishedAt: row.publishedAt || row.createdAt,
+    publishedAt: row.publishedAt || (row.status === 'PUBLISHED' ? row.createdAt : (null as unknown as string)),
     expireDate: row.expireDate,
     authorName: row.authorName || 'Lions Club Secretariat',
     authorId: row.authorId,

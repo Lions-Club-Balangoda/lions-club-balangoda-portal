@@ -310,7 +310,7 @@ export function extractTokenFromRequest(request: {
     const parts = cookieHeader.split(';');
     for (const part of parts) {
       const [key, ...vals] = part.trim().split('=');
-      if (key === 'lions_session_token' || key === 'session_token') {
+      if (key === 'lions_session_token' || key === 'session_token' || key === 'lbw_session') {
         return decodeURIComponent(vals.join('=').trim());
       }
     }

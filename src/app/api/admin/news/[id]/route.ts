@@ -6,6 +6,7 @@ import {
   deleteNews,
   type UpdateNewsInput,
 } from '../../../../../lib/news-repository.ts';
+import { validateNewsUpdateInput } from '../../../../../lib/news-validation.ts';
 import { createSafeErrorResponse } from '../../../../../lib/security/safe-error.ts';
 
 interface RouteContext {
@@ -14,6 +15,7 @@ interface RouteContext {
 
 /**
  * CMS Admin Route: GET /api/admin/news/[id]
+ * Retrieves full news record (including DRAFT and ARCHIVED) for editing/viewing.
  */
 export async function GET(request: Request | NextRequest, context: RouteContext) {
   const auth = authorizeRequest(request, ['ADMIN', 'EDITOR']);
@@ -44,6 +46,8 @@ export async function GET(request: Request | NextRequest, context: RouteContext)
 
 /**
  * CMS Admin Route: PUT/PATCH /api/admin/news/[id]
+ * Updates news article content, lifecycle status (Publish/Unpublish), or pinning.
+ * Enforces server-side validation with field-level errors (SEC-02).
  */
 export async function PUT(request: Request | NextRequest, context: RouteContext) {
   const auth = authorizeRequest(request, ['ADMIN', 'EDITOR']);
@@ -53,9 +57,21 @@ export async function PUT(request: Request | NextRequest, context: RouteContext)
 
   try {
     const { id } = await context.params;
-    const body = (await request.json().catch(() => ({}))) as UpdateNewsInput;
+    const rawBody = await request.json().catch(() => ({}));
+    const validation = validateNewsUpdateInput(rawBody);
 
-    const updated = updateNews(id, body);
+    if (!validation.isValid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed. Please correct the highlighted errors.',
+          errors: validation.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const updated = updateNews(id, validation.sanitizedData as UpdateNewsInput);
     if (!updated) {
       return NextResponse.json(
         { success: false, error: 'News article not found.' },
