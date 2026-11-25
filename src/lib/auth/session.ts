@@ -12,7 +12,7 @@ export interface SessionUser {
   email: string;
   fullName: string;
   role: UserRole;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface SessionPayload {
@@ -39,8 +39,11 @@ export interface AuthFailureResult {
 
 export type AuthResult = AuthSuccessResult | AuthFailureResult;
 
-const DEFAULT_SECRET = 'ci-test-secret-must-be-at-least-32-chars-long-balangoda-portal';
-const TOKEN_EXPIRY_SECONDS = 60 * 60 * 8; // 8 hours
+export const DEFAULT_SECRET = 'ci-test-secret-must-be-at-least-32-chars-long-balangoda-portal';
+export const TOKEN_EXPIRY_SECONDS = 60 * 60 * 8; // 8 hours
+export const SESSION_COOKIE_NAME = 'lions_session_token';
+export const DEFAULT_SESSION_EXPIRY_SECONDS = TOKEN_EXPIRY_SECONDS;
+export const signSessionToken = createSessionToken;
 
 /**
  * Encodes an object or buffer to base64url format.

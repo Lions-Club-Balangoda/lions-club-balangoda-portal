@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { UserRole } from '../../types/rbac';
@@ -148,10 +148,15 @@ export default function AdminDashboardPage() {
     };
   }, [router]);
 
+  const [metricsTrigger, setMetricsTrigger] = useState(0);
+
+  const fetchLiveMetrics = useCallback(() => {
+    setMetricsTrigger((prev) => prev + 1);
+  }, []);
+
   // Load live counts if available
   useEffect(() => {
     if (!currentUser) return;
-
     let ignore = false;
 
     async function loadMetrics() {
@@ -223,7 +228,7 @@ export default function AdminDashboardPage() {
     return () => {
       ignore = true;
     };
-  }, [currentUser]);
+  }, [currentUser, metricsTrigger]);
 
   const handleSignOut = async () => {
     try {
