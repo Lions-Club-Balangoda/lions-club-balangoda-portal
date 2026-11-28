@@ -7,10 +7,10 @@
  */
 
 import { NextResponse } from 'next/server';
-import { signSessionToken, SESSION_COOKIE_NAME, DEFAULT_SESSION_EXPIRY_SECONDS } from '../../../../lib/auth/session.ts';
-import { getAuthSecret, createDefensiveAuthResponse } from '../../../../lib/auth/guards.ts';
-import { verifyPassword } from '../../../../lib/auth/password.ts';
-import type { AuthUser } from '../../../../types/rbac.ts';
+import { signSessionToken, SESSION_COOKIE_NAME, DEFAULT_SESSION_EXPIRY_SECONDS } from '../../../../../lib/auth/session.ts';
+import { getAuthSecret, createDefensiveAuthResponse } from '../../../../../lib/auth/guards.ts';
+import { verifyPassword } from '../../../../../lib/auth/password.ts';
+import type { AuthUser } from '../../../../../types/rbac.ts';
 
 // Pre-seeded club accounts (matching database/seeds/001_initial_seed.sql)
 // Admin: admin@balangodalions.org / lion123456

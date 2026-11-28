@@ -5,6 +5,7 @@ import {
   createNews,
   type CreateNewsInput,
 } from '../../../../lib/news-repository.ts';
+import { validateNewsCreateInput } from '../../../../lib/news-validation.ts';
 import { createSafeErrorResponse } from '../../../../lib/security/safe-error.ts';
 
 /**
@@ -50,6 +51,7 @@ export async function GET(request: Request | NextRequest) {
 /**
  * CMS Admin Route: POST /api/admin/news
  * Creates a new news article/announcement in the CMS. Requires ADMIN or EDITOR role.
+ * Enforces server-side validation with field-level errors (SEC-02).
  */
 export async function POST(request: Request | NextRequest) {
   const auth = authorizeRequest(request, ['ADMIN', 'EDITOR']);
@@ -58,16 +60,21 @@ export async function POST(request: Request | NextRequest) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Partial<CreateNewsInput>;
+    const rawBody = await request.json().catch(() => ({}));
+    const validation = validateNewsCreateInput(rawBody);
 
-    if (!body.title || !body.title.trim()) {
+    if (!validation.isValid) {
       return NextResponse.json(
-        { success: false, error: 'News article title is required.' },
+        {
+          success: false,
+          error: 'Validation failed. Please correct the highlighted errors.',
+          errors: validation.errors,
+        },
         { status: 400 }
       );
     }
 
-    const created = createNews(body as CreateNewsInput, auth.user!.userId);
+    const created = createNews(validation.sanitizedData as CreateNewsInput, auth.user!.userId);
 
     return NextResponse.json(
       {

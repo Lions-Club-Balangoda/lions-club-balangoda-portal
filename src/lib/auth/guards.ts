@@ -121,8 +121,8 @@ export async function requireAuth(request: Request | Headers): Promise<GuardResu
     };
   }
 
-  const user = await verifySessionToken(token, secret);
-  if (!user) {
+  const payload = await verifySessionToken(token, secret);
+  if (!payload) {
     return {
       user: null,
       errorResponse: createDefensiveAuthResponse(
@@ -131,6 +131,14 @@ export async function requireAuth(request: Request | Headers): Promise<GuardResu
       ),
     };
   }
+
+  const user: AuthUser = {
+    userId: payload.sub,
+    username: payload.username,
+    email: payload.email,
+    fullName: payload.fullName,
+    role: payload.role,
+  };
 
   return {
     user,

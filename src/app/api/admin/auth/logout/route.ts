@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { SESSION_COOKIE_NAME } from '../../../../lib/auth/session.ts';
+import { SESSION_COOKIE_NAME } from '../../../../../lib/auth/session.ts';
 
 export async function POST() {
   const response = NextResponse.json({

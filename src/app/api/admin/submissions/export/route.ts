@@ -7,7 +7,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { requirePermission } from '../../../../lib/auth/guards.ts';
+import { requirePermission } from '../../../../../lib/auth/guards.ts';
 
 const MOCK_VOLUNTEER_SUBMISSIONS = [
   {

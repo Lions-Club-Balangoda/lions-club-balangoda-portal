@@ -30,7 +30,8 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
     const sessionCookie =
       request.cookies.get('lions_session_token')?.value ||
-      request.cookies.get('session_token')?.value;
+      request.cookies.get('session_token')?.value ||
+      request.cookies.get('lbw_session')?.value;
 
     const authHeader = request.headers.get('authorization');
     const bearerToken =
